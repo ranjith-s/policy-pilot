@@ -1,0 +1,310 @@
+[
+  {
+    "id": "famdpwog",
+    "scheme_name": "Financial Assistance For The Marriage Of Daughters Of Poor Widows And Orphan Girls",
+    "short_title": "FAMDPWOG",
+    "level": "State",
+    "states": [
+      "Delhi"
+    ],
+    "scheme_for": "Individual",
+    "target_beneficiaries": [
+      "Individual"
+    ],
+    "categories": [
+      "Social welfare & Empowerment",
+      "Women and Child"
+    ],
+    "sub_categories": [
+      "Financial assistance",
+      "Marriage"
+    ],
+    "tags": [
+      "Financial Asisstance",
+      "Marriage",
+      "Widow",
+      "Orphan",
+      "Girl Child"
+    ],
+    "ministry": "",
+    "department": "Department of Women and Child Development",
+    "dbt_scheme": null,
+    "benefit_type": "Cash",
+    "open_date": null,
+    "close_date": null,
+    "brief_description": "This is a welfare scheme by the GNCTD to provide financial assistance to poor widows for performing the marriage of their daughters and to provide financial assistance to the guardians including Homes/Institutions or foster parents of an orphan girl or an orphan girl for her marriage.",
+    "detailed_description": "The scheme of \"Financial Assistance for the Marriage of Daughters of Poor Widows and Orphan Girls\" is the welfare scheme by the Government of National Capital Territory of Delhi to provide financial assistance to poor widows for performing the marriage of their daughters (up to two daughters) and to provide financial assistance to the guardians including Homes/Institutions or foster parents of an orphan girl or an orphan girl for her marriage. \n\n**Note:** This scheme was been transferred from the Department for the Welfare of SC/ST/OBC/Min. to Social Welfare Department from the financial year 2006-07.",
+    "benefits": "The quantum of Assistance is one-time ₹ 30,000/- up to two daughters only.",
+    "eligibility_text": "1. Financial assistance can be granted for performing marriage up to two daughters only. \n1. Residence of a minimum of 5 years in Delhi before the date of application. \n1. The income of the applicant should be less than ₹ 1,00,000/-per year from all sources (including rent, interest/dividends on savings & investments, earnings from the farm, property sale proceeds, etc.) of the applicant. \n1. Applicant should have an Aadhar number \n1. The Applicant should have a single-operated Aadhaar-linked account with any bank in the NCT of Delhi only. \n1. The applicant should not be in receipt of any assistance from the discretionary fund of the Lt. Governor or the Chief Minister of Delhi for the same purpose. \n1. The girl whose marriage is to be solemnized should be major on the date of marriage i.e. above 18 years of age. \n1. The application must be submitted within a period of sixty days, before or after the date of the marriage being solemnized.",
+    "exclusions": "NA",
+    "application": [
+      {
+        "mode": "Online",
+        "url": "https://edistrict.delhigovt.nic.in/",
+        "process": "The application is to be made online on the e-District portal (Delhi) Link: [https://edistrict.delhigovt.nic.in/](https://edistrict.delhigovt.nic.in/)\n\n> **Steps to register on the e-district portal of GNCTD -** \n\n**Step 1:** Log on to https://edistrict.delhigovt.nic.in/ \n**Step 2:** Under Citizen Corner click on \"New User\"\n**Step 3:** Click on select the document – Aadhar or Voter ID \n**Step 4:** Enter your Aadhar Card Number/Voter ID Card Number \n**Step 5:** Type the Captcha in the box shown. The \"Citizen Registration Form\" will Open.\n**Step 6:** Fill up all fields including details of the Present Residential Address \n**Step 7:** Enter Captcha, and Click on Continue. \n**Step 8:** Login ID and Password will be received on the given mobile number/e-mail address. \n**Step 9:** Now Registration on the e-district portal is complete \n\n> **Steps to register for the scheme -** \n\n**Step 1:** Click on Registered User Login. Enter the given login ID and Password. Enter Captcha and Click on Login.\n**Step 2:** Go to Main Page (Main Page) will open click on apply online. Drop Box applies for services will open – click on the link.\n**Step 3:** A list of Departments providing online services shall open – Select the Department of Women & Child Development. \n**Step 4:** Three Financial Assistance Schemes will be shown. Choose the relevant scheme and Click on Apply. \n**Step 5:** Check the BASIC/PERSONAL DETAILS FORM and click on Continue. The form will open fill up all required fields & upload all required documents as per the requirement of the scheme selected. \n**Step 6:** Then click next and upload the photograph. Then click on finish. One OTP will be received on the registered mobile number. Enter OTP and Submit. \n**Step 7:** Acknowledgment of successful submission shall be generated."
+      },
+      {
+        "mode": "Offline",
+        "url": null,
+        "process": "- The application can also be submitted offline at the concerned District Office for the time being. The application form is available at http://www.wcddel.in and at all District Offices, DWCD."
+      }
+    ],
+    "references": [
+      {
+        "title": "Guidelines",
+        "url": "https://wcd.delhi.gov.in/sites/default/files/WCD/generic_multiple_files/adharnotificationwidowandwdmscheme2022.pdf"
+      },
+      {
+        "title": "FAQ",
+        "url": "https://edistrict.delhigovt.nic.in/eDownload/FaqForm/Faq_1401.pdf"
+      }
+    ],
+    "documents_required": [],
+    "faqs": [],
+    "search_text": "financial assistance for the marriage of daughters of poor widows and orphan girls famdpwog financial asisstance marriage widow orphan girl child social welfare & empowerment women and child financial assistance marriage this is a welfare scheme by the gnctd to provide financial assistance to poor widows for performing the marriage of their daughters and to provide financial assistance to the guardians including homes/institutions or foster parents of an orphan girl or an orphan girl for her marriage. 1. financial assistance can be granted for performing marriage up to two daughters only. \n1. residence of a minimum of 5 years in delhi before the date of application. \n1. the income of the applicant should be less than ₹ 1,00,000/-per year from all sources (including rent, interest/dividends on savings & investments, earnings from the farm, property sale proceeds, etc.) of the applicant. \n1. applicant should have an aadhar number \n1. the applicant should have a single-operated aadhaar-linked account with any bank in the nct of delhi only. \n1. the applicant should not be in receipt of any assistance from the discretionary fund of the lt. governor or the chief minister of delhi for the same purpose. \n1. the girl whose marriage is to be solemnized should be major on the date of marriage i.e. above 18 years of age. \n1. the application must be submitted within a period of sixty days, before or after the date of the marriage being solemnized."
+  },
+  {
+    "id": "pmsby",
+    "scheme_name": "Pradhan Mantri Suraksha Bima Yojana",
+    "short_title": "PMSBY",
+    "level": "Central",
+    "states": [
+      "All"
+    ],
+    "scheme_for": "Individual",
+    "target_beneficiaries": [
+      "All"
+    ],
+    "categories": [
+      "Banking,Financial Services and Insurance"
+    ],
+    "sub_categories": [
+      "Insurance"
+    ],
+    "tags": [
+      "Bank Account Holders",
+      "Insurance",
+      "Accident Insurance",
+      "Death Insurance"
+    ],
+    "ministry": "Ministry Of Finance",
+    "department": "Department of Financial Service",
+    "dbt_scheme": false,
+    "benefit_type": "Cash",
+    "open_date": "2015-05-09",
+    "close_date": null,
+    "brief_description": "An Accident Insurance Scheme offering accidental death and disability cover for death or disability on account of an accident.",
+    "detailed_description": "An Accident Insurance Scheme offering accidental death and disability cover for death or disability on account of an accident.\n**Premium:**\nRs.20/- per annum per member. The premium will be deducted from the account holder’s bank / Post office account through ‘auto debit’ facility on or before 1st June of each annual coverage period under the scheme. \n**Coverage Duration:**\nCoverage under PMJJBY is valid for one year from 1st June to 31st May on payment of annual premium.\n**Accident cover assurance termination:**\nThe accident cover of the member shall terminate / be restricted accordingly on any of the following events:\n• On attaining age 70 years (age nearer birth day).\n• Closure of account with the Bank or insufficiency of balance to keep the insurance in force.\nIn case a member is covered under PMSBY through more than one account and premium is received by insurance company inadvertently, insurance cover will be restricted to Rs. 2 lakh.",
+    "benefits": "1. On Death- the Nominee shall get Rs. 2 Lakhs.\n1. Total and irrecoverable loss of both eyes or loss of use of both hands or feet or loss of sight of one eye and loss of use of hand or foot- Subscriber shall get Rs. 2 Lakhs.\n1. Total and irrecoverable loss of sight of one eye or loss of use of one hand or foot –subscriber shall get Rs. 1 Lakh.",
+    "eligibility_text": "Individual bank account holders of participating banks aged between 18 years (completed) and 70 years (age nearer birthday) who give their consent to join / enable auto-debit, will be enrolled into the scheme.",
+    "exclusions": "",
+    "application": [
+      {
+        "mode": "Offline",
+        "url": "https://jansuraksha.gov.in/Forms-PMSBY.aspx",
+        "process": "**Step 01:** In order to enrol in PMSBY offline, one can visit the bank branch where one has a savings account or the candidate can visit the official site: [https://jansuraksha.gov.in/Forms-PMSBY.aspx](https://jansuraksha.gov.in/Forms-PMSBY.aspx)**** to download the form. \n**Step 02:** After downloading the application form , candidate can fill in all the details and submit them to the bank along with the required documents.\n**Step 03:** Once it is successfully submitted , subscriber will get an Acknowledgement Slip Cum Certificate of Insurance.\nContact:\n**State wise tollfree number** - [https://jansuraksha.gov.in/files/STATEWISETOLLFREE.pdf ](https://jansuraksha.gov.in/files/STATEWISETOLLFREE.pdf)\n**National Toll Free Number** - 1800-180-1111 / 1800-110-001"
+      },
+      {
+        "mode": "Online",
+        "url": null,
+        "process": "One can also avail cover under PMSBY online using their bank's Net banking facility."
+      }
+    ],
+    "references": [
+      {
+        "title": "Scheme Guidelines",
+        "url": "https://jansuraksha.gov.in/Files/PMSBY/English/Rules.pdf"
+      }
+    ],
+    "documents_required": [],
+    "faqs": [],
+    "search_text": "pradhan mantri suraksha bima yojana pmsby bank account holders insurance accident insurance death insurance banking,financial services and insurance insurance an accident insurance scheme offering accidental death and disability cover for death or disability on account of an accident. individual bank account holders of participating banks aged between 18 years (completed) and 70 years (age nearer birthday) who give their consent to join / enable auto-debit, will be enrolled into the scheme."
+  },
+  {
+    "id": "rgisfm",
+    "scheme_name": "Research Grant For In-Service Faculty Members",
+    "short_title": "RGISFM",
+    "level": "Central",
+    "states": [
+      "All"
+    ],
+    "scheme_for": "Individual",
+    "target_beneficiaries": [
+      "Individual"
+    ],
+    "categories": [
+      "Education & Learning"
+    ],
+    "sub_categories": [
+      "Education and training grants, fellowship, stipend"
+    ],
+    "tags": [
+      "Research",
+      "Fellowship",
+      "Faculty",
+      "UGC"
+    ],
+    "ministry": "Ministry of Education",
+    "department": "Department Of Higher Education",
+    "dbt_scheme": null,
+    "benefit_type": "Composite",
+    "open_date": null,
+    "close_date": null,
+    "brief_description": "The scheme \"Research Grant for In-Service Faculty Members\" was introduced by the University Grants Commission (UGC), Department of Higher Education (DoHE). The objective of this research grant is to provide opportunities to regularly appointed faculty members of Universities/ Institutes/ Colleges.",
+    "detailed_description": "The scheme \"Research Grant for In-Service Faculty Members\" was introduced by the University Grants Commission (UGC), Department of Higher Education (DoHE). The objective of this research grant is to provide opportunities to regularly appointed faculty members of Universities/ Institutes/ Colleges (hereinafter “Institutions”) to pursue research in their area(s).",
+    "benefits": "**Tenure:** 2 years.\n**Slots:** 200 or as may be decided by the Commission\n***Financial Assistance:***\n\n 1. The quantum of support under the scheme is ₹ 10,00,000.\n 1. The grant can be utilized for purchasing items like minor equipment, consumables, contingencies, fieldwork, travel, etc.\n 1. The grant cannot be used for international travel, purchasing furniture items, or for appointing a project assistant or research fellow.\n 1. The quantum of funds under these heads can be decided by the recipient depending on his / her needs.\n 1. The items/equipment purchased from this grant shall be the property of the University.\n\n***Release of Grants:***\nThe grant will be released in 3 installments to the university. \n\n 1. Initially, 50% of the grant will be released on receipt of the joining report ([Annexure-I](https://frg.ugc.ac.in/download/Guidelines-In%20service%20faculty.pdf)). 1. The next installment of 25% of the research grant shall be paid on submission of the utilization certificate ([_Annexure-II_](https://frg.ugc.ac.in/download/Guidelines-In%20service%20faculty.pdf)) of the first installment. 1. The final installment of 25% of the research grant shall be released on a reimbursement basis on submitting the claims and utilization certificate of the second installment. \n\nHowever, the tenure to utilize the whole grant shall be 2 years from the release of the first installment of the research grant.",
+    "eligibility_text": "(i) Faculty members regularly appointed and working in the following institutions are eligible to apply under the schemes:\n(a) Universities (including constituent and affiliated colleges/institutions) are included under Section 2(f) of the UGC Act, 1956, and have valid accreditation from NAAC.\n(b) Deemed to be Universities under Section 3 of the UGC Act 1956 and having valid accreditation from NAAC.\n(c) Institutions fully funded by Central or State Governments and empowered to award Degrees.\n(d) Institutions of National Importance.\n(ii) The age of the applicant should not be greater than 50 years. (Faculty above 50 years of age is not eligible to apply).\n(iii) The applicant should have a minimum of 10 years of service left in the University from the date of submission of his / her application.\n(iv) The applicant must have successfully supervised a Ph.D. dissertation of 5 full-time candidates\n(v) The applicant must have successfully completed at least 2 sponsored research projects funded by national/international government or private agencies.",
+    "exclusions": "***Termination of Award:***\nThe Grant is liable to be terminated in the case of:\n\n 1. Misconduct.\n 1. The awardee is found ineligible later.\n 1. Any false/misleading information furnished by the awardee or any fraudulent activity by the Awardees shall lead to Penal action against him/her.\n 1. Plagiarism or unethical practices.\n 1. Any corrupt practices by the awardee.\n 1. Violation of terms and conditions of the fellowship.\n\nBefore terminating/canceling the Grant, the faculty member shall be given a reasonable opportunity to defend himself/herself.",
+    "application": [
+      {
+        "mode": "Online",
+        "url": "https://frg.ugc.ac.in/",
+        "process": "Applications are invited through online mode once a year through advertisements in leading newspapers & employment news. Short notification is also uploaded to the UGC website i.e. [www.ugc.ac.in](www.ugc.ac.in)\n**Step 1**: Read the Guidelines \nThis is the home page of the website: [https://frg.ugc.ac.in/](https://frg.ugc.ac.in/)\n\n - 5 schemes are displayed on the Homepage.\n - Under each scheme, UGC guidelines are available. Before applying, kindly read the guidelines carefully and ensure your eligibility.\n\n**Step 2:** Registration\n\n - On the homepage, for registration, click on “New User” for the scheme you need to apply.\n - Here, you need to fill in all the details for registration and provide an email address that will be used for all future correspondence.\n - Please keep ready a scanned copy of your passport-size photograph and signature (size upto 1MB, format: jpg), before registration.\n - The details provided at the registration stage will not be modified, after submission. It will be reflected in the Profile.\n - Click on the ‘Submit’ button, after filling in all details. \n\n**Step 3:** Login\n\n - After registration, you will receive an email from ugchelp@mail.inflibnet.ac.in with the Scheme Login Credentials to fill out the application form.\n - You need to fill in the received login credentials\n - Please change the password while logging in for the first time. Remember the new password, thereafter.\n\n**Step 4:** Dashboard\n\n - The details provided by you during Registration are now available in Profile.\n - Various icons displayed here will be shown in red color before complete details are entered. Once all details are filled in and submitted, the color of the icons will change to green.\n - Here, you need to click on the “Eligibility Criteria” button.\n\n**Step 5:** Eligibility alert\n\n - Read all the criteria and click on the check box next to UGC guidelines. \n\n**Step 6:** Eligibility \n\n - Please provide all the required details here.\n - Proof of being a single girl child has to be submitted from the parents on an affidavit of ₹ 100/- stamp paper duly attested by SDM/First Class Magistrate/Tahsildar as per the prescribed proforma. In case, the parents are not alive, the affidavit can be submitted by the guardian of the Candidate. (Size: less than 1 MB)\n\n - Kindly note that, once submitted, the eligibility form will not be modified.\n - And Click on the ‘Submit’ button.\n\n**Step 7**: Data Capturing Format \nAfter that, you click on the “Apply Now” box (see on rectangle)\nHere, Data Capturing Dashboard will display where you need to fill in PG and Ph.D. details\nClick on the PG Educational Qualification box\n**Step 8:** PG details\n\n - Provide PG details\n - And Click on the ‘Submit’ button\n\n**Step 9:** Ph.D. Details\n\n - Provide Ph.D.-related details and upload the required documents \n - And Click on the ‘Submit’ button\n\n**Step 10:** Declaration\n\n - Please read the declaration carefully.\n - If you agree with the declaration, click on the check box next to “I Agree with above” \n - And Click on the ‘Submit’ button.\n\n_Please save your application for future use._\n***Note:*** _No hard copies of the application form will be accepted or entertained at any point of time_"
+      }
+    ],
+    "references": [
+      {
+        "title": "Guidelines",
+        "url": "https://frg.ugc.ac.in/download/Guidelines-In%20service%20faculty.pdf"
+      },
+      {
+        "title": "Documents Required",
+        "url": "https://frg.ugc.ac.in/download/General_Instructions_scheme.pdf"
+      },
+      {
+        "title": "Helpdesk",
+        "url": "https://frg.ugc.ac.in/Home/Contact"
+      }
+    ],
+    "documents_required": [],
+    "faqs": [],
+    "search_text": "research grant for in-service faculty members rgisfm research fellowship faculty ugc education & learning education and training grants, fellowship, stipend the scheme \"research grant for in-service faculty members\" was introduced by the university grants commission (ugc), department of higher education (dohe). the objective of this research grant is to provide opportunities to regularly appointed faculty members of universities/ institutes/ colleges. (i) faculty members regularly appointed and working in the following institutions are eligible to apply under the schemes:\n(a) universities (including constituent and affiliated colleges/institutions) are included under section 2(f) of the ugc act, 1956, and have valid accreditation from naac.\n(b) deemed to be universities under section 3 of the ugc act 1956 and having valid accreditation from naac.\n(c) institutions fully funded by central or state governments and empowered to award degrees.\n(d) institutions of national importance.\n(ii) the age of the applicant should not be greater than 50 years. (faculty above 50 years of age is not eligible to apply).\n(iii) the applicant should have a minimum of 10 years of service left in the university from the date of submission of his / her application.\n(iv) the applicant must have successfully supervised a ph.d. dissertation of 5 full-time candidates\n(v) the applicant must have successfully completed at least 2 sponsored research projects funded by national/international government or private agencies."
+  },
+  {
+    "id": "sfava",
+    "scheme_name": "Scheme For Financial Assistance For Veteran Artists",
+    "short_title": "Sfava",
+    "level": "Central",
+    "states": [
+      "All"
+    ],
+    "scheme_for": "Individual",
+    "target_beneficiaries": [
+      "Individual"
+    ],
+    "categories": [
+      "Sports & Culture",
+      "Social welfare & Empowerment"
+    ],
+    "sub_categories": [
+      "Culture",
+      "Pension",
+      "Financial assistance",
+      "Citizen empowerment"
+    ],
+    "tags": [
+      "Artists",
+      "Pension",
+      "Veteran",
+      "Culture",
+      "Senior Citizen",
+      "Financial Assistance"
+    ],
+    "ministry": "Ministry Of Culture",
+    "department": "",
+    "dbt_scheme": false,
+    "benefit_type": "Cash",
+    "open_date": null,
+    "close_date": null,
+    "brief_description": "A pension scheme by MoC improves the financial and socio-economic status of the old artists and scholars who have contributed significantly in their specialized fields. Still, due to old age, they have to lead a miserable life or are in penury condition.",
+    "detailed_description": "The “Scheme for Financial Assistance for Veteran Artists”, earlier known as “Scheme for Pension and Medical Aid to Artists” was launched by the Ministry of Culture. The Scheme is meant for improving the financial and socio-economic status of the old artists and scholars who have contributed significantly in their specialized fields of arts, letters, etc. in their active age or are still contributing in the field of arts, letters, etc. but due to old age, they have to lead a miserable life or are in penury condition.\nUnder the scheme, financial assistance from the Government may be given in the form of a monthly allowance. Such allowance given to the artists recommended under the center-state Quota will be shared by the Centre and State Government/UT Administration concerned.\n**The following two types of cases/requests will be covered under the Scheme:**\n\n 1. Existing beneficiaries getting monthly artistes pension under the 1961 Scheme of ‘Financial Assistance to Persons Distinguished in Letters, Arts and such other walks of life who may be in indigent circumstances’ as amended from time to time; and\n 1. Fresh cases of artists, writers, etc. who are eligible for a grant/monthly financial assistance under the extant guidelines of the Scheme.\n\n**Administration of the Scheme:**\nThe Scheme will be implemented by the Ministry with the support of all Zonal Cultural Centres and SCZCC, Nagpur will be the main coordinator. The Ministry reserves the right to modify the provisions of the Scheme at any time. In order to implement the Scheme in a better perspective, the Scheme Guidelines will be circulated widely through State Governments/UT Administrations along with sharing the data of beneficiaries of the Central Government with them.",
+    "benefits": "1. Under the scheme, a total allowance of ₹6000/- per month will be given to an eligible beneficiary.\n 1. In case of the death of a beneficiary getting an artist pension, the financial assistance may be transferred, at the discretion of the Central Government, in the name of the spouse of the beneficiary till life.\n\n**Note 01:** The monthly allowance contributed by the State Government/UT Administration concerned shall be at least ₹500/- per month per beneficiary.\n**Note 02:** The monthly allowance contributed by the Central Government shall not exceed ₹5500/- per month per beneficiary.\n**Note 03:** Out of ₹6000/-, the monthly contribution of allowance of the Central Government will be less than the extent of the monthly contribution of allowance being provided to the applicant by the State Government/UT Administration.\n**Note 04:** If State Government is already providing ₹1000/- per month pension to an artiste recommended to get financial assistance from the Central Government under this Scheme, in that case, the contribution of the Central Government would be only ₹5000/- per month.\n**Note 05:** In respect of State Govt./UT Administration where there is no provision for an Artist's Pension, ₹6000/- per month will be paid as an Artist Pension by the Central Government.\n**Note 06:** In case of the death of a beneficiary, a request application should be received in the Ministry of Culture from the spouse along with the relevant documents within the period of one year from the date of death of the beneficiary artist. After the period of one year, the claim for the transfer of pension in the name of the spouse will stand forfeited and no request in this regard shall be entertained.",
+    "eligibility_text": "1. To be eligible for assistance under the Scheme, a person's contribution to art and letters, etc. must be of significance.\n 1. Traditional scholars who have made significant contributions in their fields would also be eligible notwithstanding the absence of any published works.\n 1. The personal income of the applicant (including the income of the spouse) must not exceed ₹4,000/- per month or an annual income of ₹48,000/-. [This excludes artiste pension assistance amount already getting by a beneficiary from the Government (i.e. concerned State Govt./UT Administration and/or Ministry of Culture)]\n 1. The applicant should not be less than 60 (sixty) years of age (This does not apply in the case of a spouse).\n 1. The applicant artiste is getting a pension of at least ₹500/- per month from the concerned State Government/UT Administration or is recommended by the Zonal Cultural Centres, Ministry of Culture, for the artists of their Members State where State Pension is not there.\n 1. The applicant artists should not be getting financial assistance under other Schemes of the Ministry viz. Repertory Grant etc.",
+    "exclusions": "",
+    "application": [
+      {
+        "mode": "Online",
+        "url": "http://csms.nic.in/login/index.php",
+        "process": "**Application Procedure:**\nThe application may be made online through using the Registration/login Page of \"[Culture Scheme Monitoring System (CSMS)](http://csms.nic.in/login/index.php)\" on the [website of the Ministry of Culture](https://indiaculture.gov.in) under the heading of \"MOC Schemes Application\".\n**Selection of Applicants for Award of Artists Pension:**\n**Step 01:** The applications of eligible artists found to be complete in all respects will be placed before Expert Committee constituted by the Ministry of Culture under the Scheme after getting physical inspection/verification of the applicants done by officer(s) of the Ministry of Culture or one of the organizations of Ministry of Culture.\n**Step 02:** The Expert Committee will consider the applications in terms of extant guidelines of the Scheme and recommend the names of deserving candidates for the award of Artists' Pension solely on merit considering the financial position and eminence etc. of the applicant artist.\n**Step 03:** The recommendations of the Expert Committee are to be examined by the Administration Division with reference to the Scheme guidelines and the rules of the Govt. as also the availability of funds under the Scheme to facilitate an appropriate decision by the Competent Authority.\n**Step 04:** The cases of all the recommended candidates will be submitted finally for getting approval of the Competent Authority which will be one level above the Chairperson of the Expert Committee. Before the release of financial assistance to the approved candidates, the concurrence of the Internal Finance Division shall be obtained.\n**Disbursement of artist's pension:**\nMonthly Artist Pension to the approved existing beneficiaries (i.e. pensioner) and new artists to be included in the beneficiaries list subsequent to the recommendation of the Expert Committee and thereafter approval of the Competent Authority, will be disbursed by the Ministry of Culture through Public Financial Management System (PFMS)/Direct Benefit Transfer(DBT) or through Service Provider (appointed by Ministry of Culture for disbursement of Artists Pension) directly into their bank account subject to receiving the following documents mandatorily online on the email of Artistes Pension Section of the Ministry i.e. documents.moc@gmail.com or artistspension.moc@gmail.com and after examination/scrutiny, the same are found to be in order:\n\n 1. Every Year in November, the Digital Life Certificate (DLC) of the beneficiary is processed through the Jeevan Pramaan Portal (https://jeevanpramaan.gov.in) by using necessary information like Aadhaar number, Mobile number, and Pension Payment Order (PPO) displayed by the Ministry on its website [Till the time the Aadhaar Card is made mandatory by the Government for an individual residing in the State of Assam, Meghalaya, and Jammu & Kashmir, they may submit a colored scanned copy of their original Life Certificate]; and\n 1. Every Five (05) Years, a Coloured scanned copy of the original Income Certificate in the prescribed format is issued by the concerned Competent Authority of the States/UTs. The beneficiaries will have to furnish any other requisite information/document(s) as sought by the Ministry from time to time. In case the requisite documents sought by the Ministry are not received from a beneficiary, the pension will not be released to him/her. Further, if any discrepancy is found in the documents furnished by the beneficiary, the pension may not be released or stopped forthwith till such time the discrepancy is rectified.\n\n**Renewal of financial assistance to existing beneficiaries:**\nSubject to the above provisions the recurring monthly allowance sanctioned under the Scheme to the existing beneficiaries shall be for such period as may be determined by the Central Government and/or may be continued on a year-to-year basis on receipt of Digital Life Certificate (DLC) and Income Certificate from them.\n**Discontinuance of allowance:**\nIf the financial means of a recipient improve beyond ₹4000/- (Rupees four thousand only) per month or annual income of ₹48,000/- (Rupees forty-eight thousand only) [This excludes artiste pension assistance amount already getting by a beneficiary from the Government (i.e. concerned State Govt./UT Administration and/or Ministry of Culture)], allowance under the Scheme will be discontinued forthwith without any notice to the recipient. The government may also at its discretion terminate the allowance after giving three months' notice to the recipient.\n Any recipient may also relinquish his/her right to receive allowance by giving written notice to the Government. In such cases, the allowance will be discontinued with effect from the date of his/ her letter of relinquish.\n**Contact Details:**\n\n 1. Section Officer, 210, IInd, ‘D’Block, Puratatva Bhawan, G.P.O. Complex, I.N.A. New Delhi-110023. : (011)-24642165.\n 1. Manager (P & GS), Life Insurance Corporation of India (LIC), 6th & 7th Floor, Jeevan Parkash, 25, Kasturba Gandhi Marg, New Delhi- 110001.\n 1. Contact Nos. for Enquiries: 23708275, 23705953, Fax No. 23350832, Email: bo_g103[at]licindia[dot]com"
+      },
+      {
+        "mode": "Offline",
+        "url": "https://www.indiaculture.nic.in/sites/default/files/Schemes/New_application_form_for_Artistes_Pension_1_23_07_2019.pdf",
+        "process": "1. The hard copy of the duly filled-in application form for the award of Artists' Pension along with all the necessary enclosures as mentioned in the application form may be sent to the following address through respective State Government/UT Administrations with their recommendations in the prescribed format- \"The Director, South Central Zonal Cultural Centre, 56/1, Civil Lines, Opposite MLA’s Hostel, Nagpur, Maharashtra - 440001\"\n 1. All entries in the application form should be legible and filled in clearly. Each page of the application and enclosures should be serially numbered and signed by the applicant. Further, the page number of the relevant document should clearly be indicated on the checklist."
+      }
+    ],
+    "references": [
+      {
+        "title": "Official Website",
+        "url": "https://indiaculture.gov.in/scheme-financial-assistance-veteran-artists"
+      },
+      {
+        "title": "Notice",
+        "url": "https://indiaculture.gov.in/sites/default/files/Schemes/NOTICE-inviting_requisite_document_from_the_beneficiary_for_release_of_their_financial_assistance_under_the_scheme_11_07_2023.pdf"
+      },
+      {
+        "title": "Application Form",
+        "url": "https://indiaculture.gov.in/sites/default/files/Schemes/Application_for_Scheme_for_Financial_Assistance_for_Veteran_Artists_09112022.pdf"
+      }
+    ],
+    "documents_required": [],
+    "faqs": [],
+    "search_text": "scheme for financial assistance for veteran artists sfava artists pension veteran culture senior citizen financial assistance sports & culture social welfare & empowerment culture pension financial assistance citizen empowerment a pension scheme by moc improves the financial and socio-economic status of the old artists and scholars who have contributed significantly in their specialized fields. still, due to old age, they have to lead a miserable life or are in penury condition. 1. to be eligible for assistance under the scheme, a person's contribution to art and letters, etc. must be of significance.\n 1. traditional scholars who have made significant contributions in their fields would also be eligible notwithstanding the absence of any published works.\n 1. the personal income of the applicant (including the income of the spouse) must not exceed ₹4,000/- per month or an annual income of ₹48,000/-. [this excludes artiste pension assistance amount already getting by a beneficiary from the government (i.e. concerned state govt./ut administration and/or ministry of culture)]\n 1. the applicant should not be less than 60 (sixty) years of age (this does not apply in the case of a spouse).\n 1. the applicant artiste is getting a pension of at least ₹500/- per month from the concerned state government/ut administration or is recommended by the zonal cultural centres, ministry of culture, for the artists of their members state where state pension is not there.\n 1. the applicant artists should not be getting financial assistance under other schemes of the ministry viz. repertory grant etc."
+  },
+  {
+    "id": "sui",
+    "scheme_name": "Stand-Up India",
+    "short_title": "SUPI",
+    "level": "Central",
+    "states": [
+      "All"
+    ],
+    "scheme_for": "Individual",
+    "target_beneficiaries": [
+      "Individual",
+      "Business Entity"
+    ],
+    "categories": [
+      "Business & Entrepreneurship",
+      "Banking,Financial Services and Insurance",
+      "Social welfare & Empowerment"
+    ],
+    "sub_categories": [
+      "Banking and money",
+      "Loan"
+    ],
+    "tags": [
+      "Loan",
+      "Entrepreneur",
+      "Finance",
+      "Business"
+    ],
+    "ministry": "Ministry Of Finance",
+    "department": "Department of Financial Service",
+    "dbt_scheme": false,
+    "benefit_type": "Cash",
+    "open_date": "2016-04-05",
+    "close_date": "2025-03-31",
+    "brief_description": "A scheme by Ministry of Finance for financing SC/ST and Women Entrepreneurs by facilitating bank loans for setting up a greenfield project Enterprise in manufacturing, services, trading sector and activities allied to agriculture.",
+    "detailed_description": "A scheme by Ministry of Finance for financing SC/ST and/or Women Entrepreneurs by facilitating bank loans for setting up a greenfield project enterprise in manufacturing, services, trading sector and activities allied to agriculture. The objective of this scheme is to facilitate bank loans between Rs. 10 lakh and Rs. 1 Crore to at least one Scheduled Caste (SC) or Scheduled Tribe (ST) borrower and at least one woman borrower per bank branch for setting up a greenfield enterprise. In case of non-individual enterprises, at least 51% of the shareholding and controlling stake should be held by either an SC/ST or Woman entrepreneur.",
+    "benefits": "1. Facilitation of composite loan (inclusive of term loan and working capital) between ₹10 Lakhs and ₹100 Lakhs. Rupay debit card to be issued for convenience of the borrower.\n1. The web portal by SIDBI provides hand-holding support through a network of agencies engaged in training, skill development, mentoring, project report preparation, application filling, work shed / utility support services, subsidy schemes etc.",
+    "eligibility_text": "- Finance is provided for Greenfield Enterprises.\n- If the applicant is a male, he must be from SC / ST category.\n- The age of the applicant must be at least 18 years.\n- The applicant must not be in default to any bank/financial institution.",
+    "exclusions": "",
+    "application": [
+      {
+        "mode": "Online",
+        "url": "www.standupmitra.in",
+        "process": "Either approach your nearest bank branch to apply (locate your nearest bank here - [https://www.rbi.org.in/Scripts/query.aspx ](https://www.rbi.org.in/Scripts/query.aspx))Or Through the Lead District Manager (LDM) (find the address and the email of the LDM of your district here - [https://www.standupmitra.in/LDMS#NoBack](https://www.standupmitra.in/LDMS#NoBack))\nOr Apply Through Portal: [www.standupmitra.in](https://www.standupmitra.in/)\n**Process:**\n\n1. The first step is to visit the official portal of StandUp India at: [https://www.standupmitra.in/Login/Register](https://www.standupmitra.in/Login/Register) 1. Enter the full details of the business location.\n1. Select the category between SC, ST, Woman, and whether the stake held is 51% or higher.\n1. Select the nature of the proposed business; the loan amount desired description of the business, the details of the premises, etc.\n1. Populate the fields with past business experience, including tenure.\n1. Select the need for hand-holding is required.\n1. Enter all the personal details sought, which include the name of the enterprise and the constitution.\n1. The last step is to select the register button to complete the process.\n\nOnce you have completed registration, you are eligible to initiate the StandUp India Loan Application process with the respective financial institution for the officials to contact you for completing the StandUp India Loan Process and requisite formalities."
+      }
+    ],
+    "references": [
+      {
+        "title": "Guidelines",
+        "url": "https://www.udyami.org.in/storage/schemes/file/t4CQkv4D2TsdhI3MK8KqFSnYPw6RTBBsmh7p449D.pdf"
+      }
+    ],
+    "documents_required": [],
+    "faqs": [],
+    "search_text": "stand-up india supi loan entrepreneur finance business business & entrepreneurship banking,financial services and insurance social welfare & empowerment banking and money loan a scheme by ministry of finance for financing sc/st and women entrepreneurs by facilitating bank loans for setting up a greenfield project enterprise in manufacturing, services, trading sector and activities allied to agriculture. - finance is provided for greenfield enterprises.\n- if the applicant is a male, he must be from sc / st category.\n- the age of the applicant must be at least 18 years.\n- the applicant must not be in default to any bank/financial institution."
+  }
+]

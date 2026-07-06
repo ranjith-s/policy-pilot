@@ -1,0 +1,4 @@
+# stdlib only — no external dependencies for the CLI prototype
+# (Ollama runs as a separate local service: https://ollama.com)
+# For the later Streamlit UI phase, add:
+# streamlit
