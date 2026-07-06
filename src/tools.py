@@ -27,21 +27,89 @@ def _corpus():
 # Tools
 # ---------------------------------------------------------------------------
 
-def search_schemes(query="", state=None, category=None, max_results=5, **_):
-    """Keyword + metadata search over the corpus (the discovery tool)."""
-    query_words = [w for w in (query or "").lower().split() if len(w) > 2]
-    scored = []
+_semantic_index = None
+_semantic_tried = False
+_rules_ids_cache = None
+
+
+def _rules_ids():
+    """Scheme ids that have annotated rows in scheme_rules.csv."""
+    global _rules_ids_cache
+    if _rules_ids_cache is None:
+        import csv
+        with open(DATA_DIR / "scheme_rules.csv", newline="", encoding="utf-8") as f:
+            _rules_ids_cache = {row["id"] for row in csv.DictReader(f)}
+    return _rules_ids_cache
+
+
+def _get_semantic_index():
+    """Lazy-load the semantic index; never raises (fallback = keyword)."""
+    global _semantic_index, _semantic_tried
+    if not _semantic_tried:
+        _semantic_tried = True
+        try:
+            from embeddings import SemanticIndex
+            if SemanticIndex.available():
+                _semantic_index = SemanticIndex()
+        except Exception:
+            _semantic_index = None
+    return _semantic_index
+
+
+def _metadata_filter(state=None, category=None):
+    """Tier-1 hard filter. Returns list of candidate docs."""
+    out = []
     for d in _corpus().values():
         if state and state.lower() not in [s.lower() for s in d["states"]] \
                 and "all" not in [s.lower() for s in d["states"]]:
             continue
         if category and category.lower() not in " ".join(d["categories"]).lower():
             continue
-        score = sum(d["search_text"].count(w) for w in query_words)
-        if score > 0 or not query_words:
-            scored.append((score, d))
-    scored.sort(key=lambda x: -x[0])
+        out.append(d)
+    return out
+
+
+def search_schemes(query="", state=None, category=None, max_results=5, **_):
+    """Hybrid retrieval: metadata hard-filter -> semantic (if index built)
+    blended with keyword score. Falls back to pure keyword when the
+    embedding index or Ollama is unavailable."""
+    candidates = _metadata_filter(state, category)
+    cand_ids = {d["id"] for d in candidates}
+    by_id = {d["id"]: d for d in candidates}
+
+    query_words = [w for w in (query or "").lower().split() if len(w) > 2]
+
+    def kw_score(d):
+        return sum(d["search_text"].count(w) for w in query_words)
+
+    mode = "keyword"
+    ranked = []
+
+    index = _get_semantic_index() if query else None
+    if index is not None:
+        try:
+            sem = index.query(query, top_k=max(max_results * 3, 10),
+                              restrict_ids=cand_ids)
+            if sem:
+                mode = "hybrid"
+                max_kw = max((kw_score(by_id[sid]) for sid, _ in sem), default=0) or 1
+                ranked = sorted(
+                    ((0.7 * s + 0.3 * (kw_score(by_id[sid]) / max_kw), by_id[sid])
+                     for sid, s in sem),
+                    key=lambda x: -x[0],
+                )
+        except Exception:
+            ranked = []          # embedding call failed mid-flight -> keyword
+
+    if not ranked:               # keyword fallback (or empty query = browse)
+        ranked = sorted(
+            ((kw_score(d), d) for d in candidates
+             if kw_score(d) > 0 or not query_words),
+            key=lambda x: -x[0],
+        )
+
     return {
+        "retrieval_mode": mode,
         "matches": [
             {
                 "scheme_id": d["id"],
@@ -49,10 +117,12 @@ def search_schemes(query="", state=None, category=None, max_results=5, **_):
                 "level": d["level"],
                 "states": d["states"],
                 "brief": d["brief_description"][:200],
+                # can the engine actually verdict this scheme?
+                "rules_available": d["id"] in _rules_ids(),
             }
-            for _, d in scored[:max_results]
+            for _, d in ranked[:max_results]
         ],
-        "total_found": len(scored),
+        "total_found": len(ranked),
     }
 
 
@@ -102,6 +172,9 @@ Available tools (choose exactly one per step):
 1. search_schemes — find candidate schemes by keywords/filters.
    input: {"query": "farmer loan", "state": "Delhi", "category": "Education"}
    (all inputs optional; use the user's own words as query)
+   Each match includes "rules_available": true means run_eligibility_check can
+   give a verdict for it; false means you may only DESCRIBE the scheme and point
+   the user to its official page — never guess its eligibility.
 
 2. run_eligibility_check — check the current profile against all scheme rules.
    input: {} (uses the session profile automatically)

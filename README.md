@@ -59,6 +59,28 @@ python tests/test_engine.py     # 7 personas, 19 assertions against scheme_rules
   Blank cell = criterion not applicable. `female_any_category` in the category
   column means women of any category qualify (e.g. Stand-Up India).
 
+
+## Semantic retrieval (full-corpus scale)
+
+At ~4000 schemes, keyword search misses vocabulary mismatches ("wedding" vs
+"marriage"). The hybrid retriever fixes this:
+
+```bash
+ollama pull nomic-embed-text
+python src/embeddings.py build      # one-off, re-run when corpus changes
+```
+
+`search_schemes` then runs: metadata hard-filter -> semantic cosine search
+(numpy over a pre-computed ~12 MB matrix; no vector DB needed) -> blended with
+keyword score (0.7/0.3). If the index is missing or Ollama is down it silently
+falls back to keyword search — retrieval degrades, never dies.
+
+### Rules coverage honesty
+Only schemes annotated in `scheme_rules.csv` can receive engine verdicts.
+Search results carry `rules_available: true/false`; the agent may only
+*describe* uncovered schemes and link the official page — the verdict guard
+prevents it from claiming eligibility for them.
+
 ## Extending
 
 - **Add a scheme**: add its doc to the corpus (rerun the prep script) + one
