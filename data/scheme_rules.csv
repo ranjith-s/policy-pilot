@@ -1,6 +1,29 @@
-id,scheme_name,level,states,age_min,age_max,income_max_annual,gender,category,occupation,marital_status,requires_bank_account,land_owner,other_conditions,documents_required
-sui,Stand-Up India,Central,All,18,,,,"SC,ST,female_any_category",entrepreneur,,yes,,Greenfield enterprise only; male applicants must be SC/ST; must not be a bank defaulter,"Aadhaar,PAN,Caste Certificate (if SC/ST),Project Report"
-pmsby,Pradhan Mantri Suraksha Bima Yojana,Central,All,18,70,,,,,,yes,,Consent for auto-debit from bank account,"Aadhaar,Bank Account Details"
-sfava,Scheme For Financial Assistance For Veteran Artists,Central,All,60,,48000,,,artist,,,,Significant contribution to art/letters; already receiving state pension of at least Rs 500/month,"Aadhaar,Income Certificate,State Pension Proof,Contribution Evidence"
-famdpwog,Financial Assistance For The Marriage Of Daughters Of Poor Widows And Orphan Girls,State,Delhi,,,100000,female,,,widow,yes,,Minimum 5 years residence in Delhi; assistance for up to two daughters; Aadhaar-linked account,"Aadhaar,Income Certificate,Residence Proof (5 years),Daughter's Age Proof"
-rgisfm,Research Grant For In-Service Faculty Members,Central,All,,50,,,,faculty,,,,Regular faculty in UGC-recognized institution; 10+ years service left; supervised 5 PhDs; completed 2 sponsored projects,"Employment Proof,PhD Supervision Records,Project Completion Certificates"
+id,scheme_name,level,states,age_min,age_max,income_max_annual,gender,category,occupation,marital_status,requires_bank_account,land_owner,other_conditions,documents_required,eligibility_text_source
+famdpwog,Financial Assistance For The Marriage Of Daughters Of Poor Widows And Orphan Girls,State,Delhi,,,,,,,,,,,,"1. Financial assistance can be granted for performing marriage up to two daughters only. 
+1. Residence of a minimum of 5 years in Delhi before the date of application. 
+1. The income of the applicant should be less than ₹ 1,00,000/-per year from all sources (including rent, interest/dividends on savings & investments, earnings from the farm, property sale proceeds, etc.) of the applicant. 
+1. Applicant should have an Aadhar number 
+1. The Applicant should have a single-operated Aadhaar-linked account with any bank in the NCT of Delhi only. 
+1. The applicant should not be in receipt of any assistance from the discretionary fund of the Lt. Governor or the Chief Minister of Delhi for the same purpose. 
+1. The girl whose marriage is to be solemnized should be major on the date of marriage i.e. above 18 years of age. 
+1. The application must be submitted within a period of sixty days, before or after the date of the marriage being solemnized."
+pmsby,Pradhan Mantri Suraksha Bima Yojana,Central,All,,,,,,,,,,,,"Individual bank account holders of participating banks aged between 18 years (completed) and 70 years (age nearer birthday) who give their consent to join / enable auto-debit, will be enrolled into the scheme."
+rgisfm,Research Grant For In-Service Faculty Members,Central,All,,,,,,,,,,,,"(i) Faculty members regularly appointed and working in the following institutions are eligible to apply under the schemes:
+(a) Universities (including constituent and affiliated colleges/institutions) are included under Section 2(f) of the UGC Act, 1956, and have valid accreditation from NAAC.
+(b) Deemed to be Universities under Section 3 of the UGC Act 1956 and having valid accreditation from NAAC.
+(c) Institutions fully funded by Central or State Governments and empowered to award Degrees.
+(d) Institutions of National Importance.
+(ii) The age of the applicant should not be greater than 50 years. (Faculty above 50 years of age is not eligible to apply).
+(iii) The applicant should have a minimum of 10 years of service left in the University from the date of submission of his / her application.
+(iv) The applicant must have successfully supervised a Ph.D. dissertation of 5 full-time candidates
+(v) The applicant must have successfully completed at least 2 sponsored research projects funded by national/international government or private agencies."
+sfava,Scheme For Financial Assistance For Veteran Artists,Central,All,,,,,,,,,,,,"1. To be eligible for assistance under the Scheme, a person's contribution to art and letters, etc. must be of significance.
+ 1. Traditional scholars who have made significant contributions in their fields would also be eligible notwithstanding the absence of any published works.
+ 1. The personal income of the applicant (including the income of the spouse) must not exceed ₹4,000/- per month or an annual income of ₹48,000/-. [This excludes artiste pension assistance amount already getting by a beneficiary from the Government (i.e. concerned State Govt./UT Administration and/or Ministry of Culture)]
+ 1. The applicant should not be less than 60 (sixty) years of age (This does not apply in the case of a spouse).
+ 1. The applicant artiste is getting a pension of at least ₹500/- per month from the concerned State Government/UT Administration or is recommended by the Zonal Cultural Centres, Ministry of Culture, for the artists of their Members State where State Pension is not there.
+ 1. The applicant artists should not be getting financial assistance under other Schemes of the Ministry viz. Repertory Grant etc."
+sui,Stand-Up India,Central,All,,,,,,,,,,,,"- Finance is provided for Greenfield Enterprises.
+- If the applicant is a male, he must be from SC / ST category.
+- The age of the applicant must be at least 18 years.
+- The applicant must not be in default to any bank/financial institution."

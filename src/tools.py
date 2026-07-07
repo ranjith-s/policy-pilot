@@ -205,5 +205,8 @@ def dispatch(action, action_input, profile_store):
     if action == "get_scheme_details":
         return get_scheme_details(**action_input)
     if action == "update_profile":
+        # Validate required parameters
+        if "field" not in action_input or "value" not in action_input:
+            return {"error": f"update_profile requires 'field' and 'value', got {list(action_input.keys())}"}
         return update_profile(profile_store, **action_input)
     return {"error": f"unknown tool '{action}'"}
