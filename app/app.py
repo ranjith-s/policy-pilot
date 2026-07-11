@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from agent import Agent
-from llm import OllamaClient, GeminiClient, MockLLM
+from llm import OllamaClient, GeminiClient, OpenAIClient, MockLLM
 
 st.set_page_config(page_title="Scheme Eligibility Assistant", page_icon="🏛️",
                    layout="wide", initial_sidebar_state="expanded")
@@ -105,7 +105,9 @@ def coverage_stats():
 # ---------------------------------------------------------------- sidebar --
 with st.sidebar:
     st.title("🏛️ Scheme Assistant")
-    backend = st.radio("LLM backend", ["Local Ollama", "Google Gemini", "Mock (no LLM)"],
+    backend = st.radio("LLM backend",
+                       ["Local Ollama", "Google Gemini", "OpenAI (ChatGPT)",
+                        "Mock (no LLM)"],
                        help="Mock = scripted agent for demos without any model")
     if backend == "Local Ollama":
         model = st.text_input("Ollama model", "qwen3:4b-instruct")
@@ -117,6 +119,13 @@ with st.sidebar:
                                 type="password",
                                 help="Free key: https://aistudio.google.com/apikey — "
                                      "or set the GEMINI_API_KEY env var")
+        host = ""
+    elif backend == "OpenAI (ChatGPT)":
+        model = st.text_input("OpenAI model", "gpt-4o-mini")
+        api_key = st.text_input("OpenAI API key", os.environ.get("OPENAI_API_KEY", ""),
+                                type="password",
+                                help="Key: https://platform.openai.com/api-keys — "
+                                     "or set the OPENAI_API_KEY env var")
         host = ""
     else:
         model = host = api_key = ""
@@ -173,14 +182,15 @@ def make_agent():
         llm = MockLLM()
     elif backend == "Google Gemini":
         llm = GeminiClient(model=model, api_key=api_key)
+    elif backend == "OpenAI (ChatGPT)":
+        llm = OpenAIClient(model=model, api_key=api_key)
     else:
         llm = OllamaClient(model=model, host=host)
     return Agent(llm)
 
 
-if backend == "Google Gemini" and not api_key:
-    st.info("Enter your Gemini API key in the sidebar to start "
-            "(free at https://aistudio.google.com/apikey).")
+if backend in ("Google Gemini", "OpenAI (ChatGPT)") and not api_key:
+    st.info("Enter your API key in the sidebar to start.")
     st.stop()
 
 config = (backend, model, host, api_key)

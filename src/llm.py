@@ -3,6 +3,7 @@ llm.py — LLM backends.
 
 OllamaClient  : local model via the Ollama HTTP API.
 GeminiClient  : Google Gemini via the REST API (key from GEMINI_API_KEY env).
+OpenAIClient  : OpenAI/ChatGPT via the REST API (key from OPENAI_API_KEY env).
 MockLLM       : deterministic scripted backend so the whole agent loop can be
                 developed and tested without any LLM service (CI, demos).
 
@@ -95,6 +96,49 @@ class GeminiClient:
                 with urllib.request.urlopen(req, timeout=60) as resp:
                     data = json.loads(resp.read())
                 return data["candidates"][0]["content"]["parts"][0]["text"]
+            except (urllib.error.HTTPError, TimeoutError, OSError) as e:
+                if attempt == 2 or (isinstance(e, urllib.error.HTTPError)
+                                    and e.code in (400, 401, 403)):
+                    raise
+                time.sleep(3)
+
+
+class OpenAIClient:
+    """OpenAI (ChatGPT) backend (REST, stdlib only).
+
+    Get an API key at https://platform.openai.com/api-keys and set:
+        OPENAI_API_KEY=...   (env var; never hardcode keys)
+    """
+
+    def __init__(self, model="gpt-4o-mini", api_key=None, temperature=0.0):
+        self.model = model
+        self.api_key = api_key or os.environ.get("OPENAI_API_KEY", "")
+        self.temperature = temperature
+        if not self.api_key:
+            raise ValueError("OPENAI_API_KEY not set (env var or api_key argument)")
+
+    def chat(self, messages):
+        payload = {
+            "model": self.model,
+            "messages": messages,   # same role/content shape — direct pass-through
+            "response_format": {"type": "json_object"},  # constrain to JSON
+        }
+        # reasoning models (o*/gpt-5*) reject custom temperature; only send
+        # it for classic models
+        if not self.model.startswith(("o", "gpt-5")):
+            payload["temperature"] = self.temperature
+
+        req = urllib.request.Request(
+            "https://api.openai.com/v1/chat/completions",
+            data=json.dumps(payload).encode(),
+            headers={"Content-Type": "application/json",
+                     "Authorization": f"Bearer {self.api_key}"},
+        )
+        for attempt in (1, 2):  # one retry on transient errors / rate limits
+            try:
+                with urllib.request.urlopen(req, timeout=120) as resp:
+                    data = json.loads(resp.read())
+                return data["choices"][0]["message"]["content"]
             except (urllib.error.HTTPError, TimeoutError, OSError) as e:
                 if attempt == 2 or (isinstance(e, urllib.error.HTTPError)
                                     and e.code in (400, 401, 403)):

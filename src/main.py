@@ -19,7 +19,7 @@ if hasattr(sys.stdout, "reconfigure"):
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from agent import Agent
-from llm import OllamaClient, GeminiClient, MockLLM
+from llm import OllamaClient, GeminiClient, OpenAIClient, MockLLM
 
 BANNER = """
 ================================================================
@@ -63,8 +63,11 @@ def main():
     ap.add_argument("--mock", action="store_true", help="use scripted MockLLM (no Ollama)")
     ap.add_argument("--gemini", action="store_true",
                     help="use Google Gemini (needs GEMINI_API_KEY env var)")
+    ap.add_argument("--chatgpt", "--openai", action="store_true", dest="chatgpt",
+                    help="use OpenAI/ChatGPT (needs OPENAI_API_KEY env var)")
     ap.add_argument("--model", default=None,
-                    help="default: qwen3:4b-instruct (Ollama) / gemini-2.5-flash (--gemini)")
+                    help="default: qwen3:4b-instruct (Ollama) / gemini-2.5-flash "
+                         "(--gemini) / gpt-4o-mini (--chatgpt)")
     ap.add_argument("--host", default="http://localhost:11434")
     ap.add_argument("--show-trace", action="store_true", help="print agent steps live")
     args = ap.parse_args()
@@ -73,6 +76,8 @@ def main():
         llm = MockLLM()
     elif args.gemini:
         llm = GeminiClient(model=args.model or "gemini-2.5-flash")
+    elif args.chatgpt:
+        llm = OpenAIClient(model=args.model or "gpt-4o-mini")
     else:
         llm = OllamaClient(model=args.model or "qwen3:4b-instruct", host=args.host)
     on_step = make_step_printer(args.show_trace)

@@ -48,10 +48,11 @@ python src/main.py --show-trace
 # pick a different local model
 python src/main.py --model qwen2.5:7b
 
-# cloud LLM: Google Gemini (free key: https://aistudio.google.com/apikey)
-#   set GEMINI_API_KEY env var first — never hardcode keys
-python src/main.py --gemini
+# cloud LLMs (set the key env var first — never hardcode keys)
+python src/main.py --gemini            # GEMINI_API_KEY  (free: aistudio.google.com/apikey)
+python src/main.py --chatgpt           # OPENAI_API_KEY  (platform.openai.com/api-keys)
 python src/main.py --gemini --model gemini-2.5-pro
+python src/main.py --chatgpt --model gpt-4o
 
 # without Ollama (scripted MockLLM, exercises the full loop deterministically;
 # the UI has the same toggle in its sidebar)
