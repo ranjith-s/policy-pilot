@@ -110,7 +110,8 @@ with st.sidebar:
                         "Mock (no LLM)"],
                        help="Mock = scripted agent for demos without any model")
     if backend == "Local Ollama":
-        model = st.text_input("Ollama model", "qwen3:4b-instruct")
+        model = st.text_input("Ollama model",
+                              os.environ.get("OLLAMA_MODEL", "qwen3:4b-instruct"))
         host = st.text_input("Ollama host", "http://localhost:11434")
         api_key = ""
     elif backend == "Google Gemini":

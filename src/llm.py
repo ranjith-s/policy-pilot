@@ -30,21 +30,32 @@ class OllamaClient:
             "stream": False,
             "format": "json",  # ask Ollama to constrain output to valid JSON
             "keep_alive": "30m",  # avoid paying model reload between turns
+            # thinking models (qwen3.5...) can reason for minutes before the
+            # JSON with format-constrained output — disable; non-thinking
+            # models reject the flag with a 400, handled below
+            "think": False,
             "options": {"temperature": self.temperature},
         }
-        req = urllib.request.Request(
-            f"{self.host}/api/chat",
-            data=json.dumps(payload).encode(),
-            headers={"Content-Type": "application/json"},
-        )
         # retry transient errors once (model loading / swap on small GPUs
         # can cause a slow first response or a spurious 500)
         for attempt in (1, 2):
+            req = urllib.request.Request(
+                f"{self.host}/api/chat",
+                data=json.dumps(payload).encode(),
+                headers={"Content-Type": "application/json"},
+            )
             try:
                 with urllib.request.urlopen(req, timeout=300) as resp:
                     data = json.loads(resp.read())
                 return data["message"]["content"]
-            except (urllib.error.HTTPError, TimeoutError, OSError):
+            except urllib.error.HTTPError as e:
+                if e.code == 400 and "think" in payload:
+                    payload.pop("think")   # model doesn't support the flag
+                    continue
+                if attempt == 2:
+                    raise
+                time.sleep(3)
+            except (TimeoutError, OSError):
                 if attempt == 2:
                     raise
                 time.sleep(3)
