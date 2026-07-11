@@ -30,8 +30,10 @@ import urllib.request
 from pathlib import Path
 
 API_BASE = os.environ.get("MYSCHEME_API_BASE", "https://api.myscheme.gov.in")
-# frontend-embedded public key; override if the portal rotates it
-API_KEY = os.environ.get("MYSCHEME_API_KEY", "tYTy5eEhlu9rFjyxuCr7ra7ACp4dv1RH8gWuHTDc")
+# The portal frontend sends an x-api-key with every request. Set it via env:
+#   export MYSCHEME_API_KEY=...   (find it in browser devtools -> Network tab
+#   on myscheme.gov.in, request headers of any /search or /schemes call)
+API_KEY = os.environ.get("MYSCHEME_API_KEY", "")
 RATE_DELAY = 1.0   # seconds between requests — be gentle, it's a public service
 
 
@@ -90,6 +92,9 @@ def main():
     ap.add_argument("--outdir", default="data_raw")
     ap.add_argument("--limit", type=int, default=0, help="smoke test: cap schemes")
     args = ap.parse_args()
+
+    if not API_KEY:
+        sys.exit("Set MYSCHEME_API_KEY first (see comment at top of this file).")
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
