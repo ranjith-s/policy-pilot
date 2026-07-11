@@ -36,11 +36,26 @@ myScheme portal (https://www.myscheme.gov.in) before applying.
 """
 
 
-def print_steps(steps):
-    for i, s in enumerate(steps, 1):
-        print(f"    [{i}] {s['action']}({s['action_input']})")
-        if s.get("thought"):
-            print(f"        thought: {s['thought']}")
+STEP_LABELS = {
+    "search_schemes": "searching schemes",
+    "run_eligibility_check": "checking eligibility rules",
+    "get_scheme_details": "fetching scheme details",
+    "update_profile": "noting your details",
+    "ask_user": "preparing a question",
+    "final_answer": "writing the answer",
+}
+
+
+def make_step_printer(show_trace):
+    """Live progress line per agent step, so the CLI never looks frozen."""
+    def on_step(act):
+        label = STEP_LABELS.get(act["action"], act["action"])
+        print(f"  … {label}", flush=True)
+        if show_trace:
+            print(f"      {act['action']}({act['action_input']})", flush=True)
+            if act.get("thought"):
+                print(f"      thought: {act['thought']}", flush=True)
+    return on_step
 
 
 def main():
@@ -52,7 +67,8 @@ def main():
     args = ap.parse_args()
 
     llm = MockLLM() if args.mock else OllamaClient(model=args.model, host=args.host)
-    agent = Agent(llm)
+    on_step = make_step_printer(args.show_trace)
+    agent = Agent(llm, on_step=on_step)
 
     print(BANNER)
     if args.mock:
@@ -74,7 +90,7 @@ def main():
             print(f"stored profile: {agent.profile}")
             continue
         if user.lower() == "reset":
-            agent = Agent(llm)
+            agent = Agent(llm, on_step=on_step)
             pending_question = False
             print("(new session)")
             continue
@@ -86,11 +102,6 @@ def main():
                   f"and the model pulled? Try again, or use --mock.\n")
             continue
         pending_question = result["type"] == "question"
-
-        if args.show_trace:
-            print("  --- agent steps ---")
-            print_steps(result["steps"])
-            print("  -------------------")
 
         prefix = "agent asks" if pending_question else "agent"
         print(f"\n{prefix} > {result['text']}\n")

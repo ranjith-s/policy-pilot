@@ -33,7 +33,7 @@ class OllamaEmbedder:
         far faster than one HTTP request per text)."""
         req = urllib.request.Request(
             f"{self.host}/api/embed",
-            data=json.dumps({"model": self.model,
+            data=json.dumps({"model": self.model, "keep_alive": "30m",
                              "input": [t[:2000] for t in texts]}).encode(),
             headers={"Content-Type": "application/json"},
         )

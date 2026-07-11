@@ -26,6 +26,7 @@ class OllamaClient:
             "messages": messages,
             "stream": False,
             "format": "json",  # ask Ollama to constrain output to valid JSON
+            "keep_alive": "30m",  # avoid paying model reload between turns
             "options": {"temperature": self.temperature},
         }
         req = urllib.request.Request(

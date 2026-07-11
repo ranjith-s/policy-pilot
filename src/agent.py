@@ -39,13 +39,15 @@ STRICT RULES:
 - If run_eligibility_check reports a suggested_next_question and you have questions left, use ask_user with it. One question at a time.
 - In your final_answer: state eligible schemes with reasons, required documents, and how to apply. Always add: "This is indicative only — verify on the official myScheme portal before applying."
 - If nothing matches, say so honestly and suggest the nearest Common Service Centre.
+- Keep "thought" to ONE short sentence.
 - Respond ONLY with the JSON object. No other text.
 """
 
 
 class Agent:
-    def __init__(self, llm, session_id=None):
+    def __init__(self, llm, session_id=None, on_step=None):
         self.llm = llm
+        self.on_step = on_step            # live progress callback: fn(act_dict)
         self.profile = {}                 # session memory
         self.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         self.last_engine_result = None    # for the verdict guard
@@ -142,6 +144,8 @@ class Agent:
             self.messages.append({"role": "assistant", "content": json.dumps(act)})
             self._trace(event="agent_step", step=step_no, **act)
             steps.append(act)
+            if self.on_step:
+                self.on_step(act)
             action, inp = act["action"], act["action_input"]
 
             # ---- terminal actions ----
