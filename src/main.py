@@ -19,7 +19,7 @@ if hasattr(sys.stdout, "reconfigure"):
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from agent import Agent
-from llm import OllamaClient, MockLLM
+from llm import OllamaClient, GeminiClient, MockLLM
 
 BANNER = """
 ================================================================
@@ -61,12 +61,20 @@ def make_step_printer(show_trace):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mock", action="store_true", help="use scripted MockLLM (no Ollama)")
-    ap.add_argument("--model", default="qwen3:4b-instruct")
+    ap.add_argument("--gemini", action="store_true",
+                    help="use Google Gemini (needs GEMINI_API_KEY env var)")
+    ap.add_argument("--model", default=None,
+                    help="default: qwen3:4b-instruct (Ollama) / gemini-2.5-flash (--gemini)")
     ap.add_argument("--host", default="http://localhost:11434")
     ap.add_argument("--show-trace", action="store_true", help="print agent steps live")
     args = ap.parse_args()
 
-    llm = MockLLM() if args.mock else OllamaClient(model=args.model, host=args.host)
+    if args.mock:
+        llm = MockLLM()
+    elif args.gemini:
+        llm = GeminiClient(model=args.model or "gemini-2.5-flash")
+    else:
+        llm = OllamaClient(model=args.model or "qwen3:4b-instruct", host=args.host)
     on_step = make_step_printer(args.show_trace)
     agent = Agent(llm, on_step=on_step)
 

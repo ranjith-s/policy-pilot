@@ -1,14 +1,16 @@
 """
 llm.py — LLM backends.
 
-OllamaClient  : real local llama3.1 via the Ollama HTTP API.
+OllamaClient  : local model via the Ollama HTTP API.
+GeminiClient  : Google Gemini via the REST API (key from GEMINI_API_KEY env).
 MockLLM       : deterministic scripted backend so the whole agent loop can be
-                developed and tested without Ollama running (CI, this sandbox).
+                developed and tested without any LLM service (CI, demos).
 
-Both expose .chat(messages) -> str
+All expose .chat(messages) -> str
 """
 
 import json
+import os
 import time
 import urllib.error
 import urllib.request
@@ -43,6 +45,59 @@ class OllamaClient:
                 return data["message"]["content"]
             except (urllib.error.HTTPError, TimeoutError, OSError):
                 if attempt == 2:
+                    raise
+                time.sleep(3)
+
+
+class GeminiClient:
+    """Google Gemini backend (REST, stdlib only).
+
+    Get a free API key at https://aistudio.google.com/apikey and set:
+        GEMINI_API_KEY=...   (env var; never hardcode keys)
+    """
+
+    def __init__(self, model="gemini-2.5-flash", api_key=None, temperature=0.0):
+        self.model = model
+        self.api_key = api_key or os.environ.get("GEMINI_API_KEY", "")
+        self.temperature = temperature
+        if not self.api_key:
+            raise ValueError("GEMINI_API_KEY not set (env var or api_key argument)")
+
+    def chat(self, messages):
+        system, contents = None, []
+        for m in messages:
+            if m["role"] == "system":
+                system = m["content"]
+            else:
+                contents.append({
+                    "role": "model" if m["role"] == "assistant" else "user",
+                    "parts": [{"text": m["content"]}],
+                })
+        payload = {
+            "contents": contents,
+            "generationConfig": {
+                "temperature": self.temperature,
+                "responseMimeType": "application/json",  # constrain to JSON
+            },
+        }
+        if system:
+            payload["systemInstruction"] = {"parts": [{"text": system}]}
+
+        req = urllib.request.Request(
+            f"https://generativelanguage.googleapis.com/v1beta/models/"
+            f"{self.model}:generateContent",
+            data=json.dumps(payload).encode(),
+            headers={"Content-Type": "application/json",
+                     "x-goog-api-key": self.api_key},
+        )
+        for attempt in (1, 2):  # one retry on transient errors / rate limits
+            try:
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    data = json.loads(resp.read())
+                return data["candidates"][0]["content"]["parts"][0]["text"]
+            except (urllib.error.HTTPError, TimeoutError, OSError) as e:
+                if attempt == 2 or (isinstance(e, urllib.error.HTTPError)
+                                    and e.code in (400, 401, 403)):
                     raise
                 time.sleep(3)
 

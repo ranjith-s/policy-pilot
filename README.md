@@ -48,6 +48,11 @@ python src/main.py --show-trace
 # pick a different local model
 python src/main.py --model qwen2.5:7b
 
+# cloud LLM: Google Gemini (free key: https://aistudio.google.com/apikey)
+#   set GEMINI_API_KEY env var first — never hardcode keys
+python src/main.py --gemini
+python src/main.py --gemini --model gemini-2.5-pro
+
 # without Ollama (scripted MockLLM, exercises the full loop deterministically;
 # the UI has the same toggle in its sidebar)
 python src/main.py --mock --show-trace

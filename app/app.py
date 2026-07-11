@@ -13,8 +13,10 @@ import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+import os
+
 from agent import Agent
-from llm import OllamaClient, MockLLM
+from llm import OllamaClient, GeminiClient, MockLLM
 
 st.set_page_config(page_title="Scheme Eligibility Assistant", page_icon="🏛️",
                    layout="wide")
@@ -32,10 +34,21 @@ STEP_LABELS = {
 # ---------------------------------------------------------------- sidebar --
 with st.sidebar:
     st.title("🏛️ Scheme Assistant")
-    use_mock = st.toggle("Mock LLM (no Ollama needed)", value=False,
-                         help="Scripted agent for demos without a local model")
-    model = st.text_input("Ollama model", "qwen3:4b-instruct", disabled=use_mock)
-    host = st.text_input("Ollama host", "http://localhost:11434", disabled=use_mock)
+    backend = st.radio("LLM backend", ["Local Ollama", "Google Gemini", "Mock (no LLM)"],
+                       help="Mock = scripted agent for demos without any model")
+    if backend == "Local Ollama":
+        model = st.text_input("Ollama model", "qwen3:4b-instruct")
+        host = st.text_input("Ollama host", "http://localhost:11434")
+        api_key = ""
+    elif backend == "Google Gemini":
+        model = st.text_input("Gemini model", "gemini-2.5-flash")
+        api_key = st.text_input("Gemini API key", os.environ.get("GEMINI_API_KEY", ""),
+                                type="password",
+                                help="Free key: https://aistudio.google.com/apikey — "
+                                     "or set the GEMINI_API_KEY env var")
+        host = ""
+    else:
+        model = host = api_key = ""
 
     if st.button("🔄 New session"):
         for k in ("agent", "chat", "pending_question", "last_steps"):
@@ -61,11 +74,21 @@ with st.sidebar:
 
 # ------------------------------------------------------------------ agent --
 def make_agent():
-    llm = MockLLM() if use_mock else OllamaClient(model=model, host=host)
+    if backend == "Mock (no LLM)":
+        llm = MockLLM()
+    elif backend == "Google Gemini":
+        llm = GeminiClient(model=model, api_key=api_key)
+    else:
+        llm = OllamaClient(model=model, host=host)
     return Agent(llm)
 
 
-config = (use_mock, model, host)
+if backend == "Google Gemini" and not api_key:
+    st.info("Enter your Gemini API key in the sidebar to start "
+            "(free at https://aistudio.google.com/apikey).")
+    st.stop()
+
+config = (backend, model, host, api_key)
 if "agent" not in st.session_state or st.session_state.get("config") != config:
     st.session_state.agent = make_agent()
     st.session_state.config = config
