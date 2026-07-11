@@ -24,6 +24,7 @@ import csv
 import json
 import os
 import sys
+import threading
 import time
 import urllib.parse
 import urllib.request
@@ -93,6 +94,24 @@ def _rules_slugs():
                 if (r.get("rules_source") or "").strip()}
 
 
+def _scrape_endpoint(path, url_tpl, label, slugs, idmap):
+    """One endpoint's fetch loop (own checkpoint file, own rate limit)."""
+    store = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    todo = [s for s in slugs if s not in store]
+    print(f"{label}: {len(todo)} to fetch ({len(store)} cached)", flush=True)
+    for i, slug in enumerate(todo, 1):
+        try:
+            store[slug] = _get(url_tpl.format(oid=idmap[slug]))
+        except Exception as e:
+            store[slug] = {"status": f"Error: {e!r}"}
+        if i % 25 == 0 or i == len(todo):
+            path.write_text(json.dumps(store, ensure_ascii=False),
+                            encoding="utf-8")
+            print(f"  {label}: {i}/{len(todo)}", flush=True)
+        time.sleep(RATE_DELAY)
+    path.write_text(json.dumps(store, ensure_ascii=False), encoding="utf-8")
+
+
 def cmd_scrape(args):
     if not API_KEY:
         sys.exit("Set MYSCHEME_API_KEY first (browser devtools -> Network tab "
@@ -102,23 +121,21 @@ def cmd_scrape(args):
     if args.rules_only:
         keep = _rules_slugs()
         slugs = [s for s in slugs if s in keep]
+    if args.limit:
+        slugs = slugs[:args.limit]
 
-    for path, url_tpl, label in ((DOCS_PATH, DOCS_URL, "documents"),
-                                 (FAQS_PATH, FAQS_URL, "faqs")):
-        store = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-        todo = [s for s in slugs if s not in store]
-        print(f"{label}: {len(todo)} to fetch ({len(store)} cached)", flush=True)
-        for i, slug in enumerate(todo, 1):
-            try:
-                store[slug] = _get(url_tpl.format(oid=idmap[slug]))
-            except Exception as e:
-                store[slug] = {"status": f"Error: {e!r}"}
-            if i % 25 == 0 or i == len(todo):
-                path.write_text(json.dumps(store, ensure_ascii=False),
-                                encoding="utf-8")
-                print(f"  {label}: {i}/{len(todo)}", flush=True)
-            time.sleep(RATE_DELAY)
-        path.write_text(json.dumps(store, ensure_ascii=False), encoding="utf-8")
+    # documents and faqs are independent endpoints — fetch them in parallel,
+    # each stream still at the polite 1 req/s
+    threads = [
+        threading.Thread(target=_scrape_endpoint,
+                         args=(path, url_tpl, label, slugs, idmap))
+        for path, url_tpl, label in ((DOCS_PATH, DOCS_URL, "documents"),
+                                     (FAQS_PATH, FAQS_URL, "faqs"))
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
     print("done. Now run: python pipeline/scrape_extras.py enrich")
 
 
@@ -187,6 +204,8 @@ def main():
     s = sub.add_parser("scrape")
     s.add_argument("--rules-only", action="store_true",
                    help="only schemes with eligibility rules (fast, demo-critical)")
+    s.add_argument("--limit", type=int, default=0,
+                   help="cap at first N schemes (corpus order); resume-safe")
     sub.add_parser("enrich")
     sub.add_parser("insights")
     args = ap.parse_args()
