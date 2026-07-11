@@ -37,13 +37,15 @@ FAQS_PATH = DATA / "raw_faqs.json"
 
 API_BASE = os.environ.get("MYSCHEME_API_BASE", "https://api.myscheme.gov.in")
 API_KEY = os.environ.get("MYSCHEME_API_KEY", "")
-# endpoint templates ({slug} substituted); override via env if the portal moves
+# v6 endpoints are keyed by the scheme's internal _id, not the slug;
+# data/scheme_object_ids.json (slug -> _id) is built from the detail scrape
 DOCS_URL = os.environ.get(
     "MYSCHEME_DOCS_URL",
-    API_BASE + "/schemes/v5/public/schemes/{slug}/documents?lang=en")
+    API_BASE + "/schemes/v6/public/schemes/{oid}/documents?lang=en")
 FAQS_URL = os.environ.get(
     "MYSCHEME_FAQS_URL",
-    API_BASE + "/schemes/v5/public/schemes/{slug}/faqs?lang=en")
+    API_BASE + "/schemes/v6/public/schemes/{oid}/faqs?lang=en")
+IDMAP_PATH = DATA / "scheme_object_ids.json"
 RATE_DELAY = 1.0
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -53,8 +55,11 @@ if hasattr(sys.stdout, "reconfigure"):
 def _get(url):
     req = urllib.request.Request(url, headers={
         "x-api-key": API_KEY,
-        "Accept": "application/json",
-        "User-Agent": "scheme-agent-refresh/1.0 (student capstone)",
+        "Accept": "application/json, text/plain, */*",
+        "Origin": "https://www.myscheme.gov.in",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/150.0.0.0 Safari/537.36",
     })
     with urllib.request.urlopen(req, timeout=60) as resp:
         return json.loads(resp.read())
@@ -92,7 +97,8 @@ def cmd_scrape(args):
     if not API_KEY:
         sys.exit("Set MYSCHEME_API_KEY first (browser devtools -> Network tab "
                  "on myscheme.gov.in, x-api-key header of any API call).")
-    slugs = [d["id"] for d in _corpus()]
+    idmap = json.loads(IDMAP_PATH.read_text(encoding="utf-8"))
+    slugs = [d["id"] for d in _corpus() if d["id"] in idmap]
     if args.rules_only:
         keep = _rules_slugs()
         slugs = [s for s in slugs if s in keep]
@@ -104,7 +110,7 @@ def cmd_scrape(args):
         print(f"{label}: {len(todo)} to fetch ({len(store)} cached)", flush=True)
         for i, slug in enumerate(todo, 1):
             try:
-                store[slug] = _get(url_tpl.format(slug=urllib.parse.quote(slug)))
+                store[slug] = _get(url_tpl.format(oid=idmap[slug]))
             except Exception as e:
                 store[slug] = {"status": f"Error: {e!r}"}
             if i % 25 == 0 or i == len(todo):
