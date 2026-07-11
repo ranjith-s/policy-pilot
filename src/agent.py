@@ -18,7 +18,7 @@ import re
 import time
 from pathlib import Path
 
-from tools import TOOL_SCHEMAS, dispatch
+from tools import TOOL_SCHEMAS, dispatch, compact_engine_obs
 
 LOGS_DIR = Path(__file__).resolve().parent.parent / "logs"
 MAX_STEPS = 8
@@ -195,6 +195,7 @@ class Agent:
             if action == "run_eligibility_check" and "results" in obs:
                 self.last_engine_result = obs
                 engine_ran_this_turn = True
+                obs = compact_engine_obs(obs)   # LLM sees the capped view
             self._trace(event="observation", tool=action,
                         observation=json.dumps(obs)[:1000])
             self.messages.append({

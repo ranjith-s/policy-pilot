@@ -2,3 +2,6 @@ __pycache__
 
 #ignore logs folder
 logs
+
+# raw portal scrape output (~95 MB) — regenerate with pipeline/rescrape.py
+data_raw/

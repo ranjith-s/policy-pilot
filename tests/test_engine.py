@@ -74,9 +74,46 @@ PERSONAS = [
 ]
 
 
+# personas against LLM-extracted rules (present after extract_rules.py merge);
+# skipped gracefully if the extracted schemes aren't in scheme_rules.csv yet
+LLM_PERSONAS = [
+    {
+        "name": "Widow 45 in J&K, BPL (LLM-extracted widow pension)",
+        "profile": {"age": 45, "gender": "female", "marital_status": "widow",
+                    "category": "BPL", "state": "Jammu and Kashmir",
+                    "annual_income": 30000, "occupation": "homemaker",
+                    "has_bank_account": "yes"},
+        "expect": {"ignwpsjak": "eligible"},
+    },
+    {
+        "name": "Male 45 in J&K (must fail widow pension)",
+        "profile": {"age": 45, "gender": "male", "marital_status": "married",
+                    "category": "BPL", "state": "Jammu and Kashmir",
+                    "annual_income": 30000, "occupation": "farmer",
+                    "has_bank_account": "yes"},
+        "expect": {"ignwpsjak": "not_eligible"},
+    },
+    {
+        "name": "BPL 30yo in Puducherry, income 50k (LLM-extracted RGSSS)",
+        "profile": {"age": 30, "gender": "male", "category": "BPL",
+                    "state": "Puducherry", "annual_income": 50000,
+                    "occupation": "farmer", "marital_status": "married",
+                    "has_bank_account": "yes"},
+        "expect": {"rgssspf-2012": "eligible"},
+    },
+]
+
+
 def run():
     failures = 0
-    for p in PERSONAS:
+    known_ids = {r["scheme_id"] for r in check_eligibility({})}
+    personas = list(PERSONAS)
+    for p in LLM_PERSONAS:
+        if set(p["expect"]) <= known_ids:
+            personas.append(p)
+        else:
+            print(f"skip  [{p['name']}] — scheme not in rules CSV yet")
+    for p in personas:
         results = {r["scheme_id"]: r for r in check_eligibility(p["profile"])}
         for scheme_id, expected in p["expect"].items():
             got = results[scheme_id]["status"]

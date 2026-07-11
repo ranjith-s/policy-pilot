@@ -150,6 +150,34 @@ def run_eligibility_check(profile, **_):
     }
 
 
+def compact_engine_obs(obs, max_eligible=10, max_partial=5):
+    """What the LLM sees after run_eligibility_check. With thousands of
+    annotated schemes the full result would blow the context window, so cap
+    it: top eligible with reasons/docs, top partial with missing fields,
+    counts for the rest. The agent keeps the FULL result for its guards."""
+    results = obs["results"]
+    eligible = [r for r in results if r["status"] == "eligible"]
+    partial = [r for r in results if r["status"] == "partial"]
+    return {
+        "counts": {"eligible": len(eligible), "partial": len(partial),
+                   "not_eligible": len(results) - len(eligible) - len(partial)},
+        "eligible": [
+            {"scheme_id": r["scheme_id"], "scheme_name": r["scheme_name"],
+             "reasons": r["reasons"], "other_conditions": r["other_conditions"][:200],
+             "documents_required": r["documents_required"]}
+            for r in eligible[:max_eligible]
+        ],
+        "partial_top": [
+            {"scheme_id": r["scheme_id"], "scheme_name": r["scheme_name"],
+             "missing_fields": r["missing_fields"]}
+            for r in partial[:max_partial]
+        ],
+        "suggested_next_question": obs["suggested_next_question"],
+        "summary": {"eligible": [r["scheme_name"] for r in eligible[:max_eligible]],
+                    "partial": [r["scheme_name"] for r in partial[:max_partial]]},
+    }
+
+
 def get_scheme_details(scheme_id, **_):
     """Full details for one scheme (benefits, how to apply)."""
     d = _corpus().get(scheme_id)

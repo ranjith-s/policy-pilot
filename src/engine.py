@@ -30,17 +30,17 @@ FIELD_QUESTIONS = {
 }
 
 
-# columns that count as an actual annotation; a row where ALL of these are
-# blank is an unannotated template row and must never produce a verdict
-ANNOTATION_COLUMNS = [
+# columns the engine can actually CHECK; a row with none of these set must
+# never produce a verdict (it would be "eligible" with zero real checks) —
+# this also keeps blank template rows out
+STRUCTURED_COLUMNS = [
     "age_min", "age_max", "income_max_annual", "gender", "category",
     "occupation", "marital_status", "requires_bank_account", "land_owner",
-    "other_conditions", "documents_required",
 ]
 
 
 def _is_annotated(row):
-    return any((row.get(c) or "").strip() for c in ANNOTATION_COLUMNS)
+    return any((row.get(c) or "").strip() for c in STRUCTURED_COLUMNS)
 
 
 def _load_rules(rules_csv=None):
@@ -175,6 +175,22 @@ def _check_one(rule, profile):
             reasons.append(f"Scheme is for {rule_ms}s")
         else:
             reasons.append("Marital status requirement met")
+
+    # ---- land ownership ----
+    rule_lo = (rule.get("land_owner") or "").strip().lower()
+    if rule_lo in ("yes", "no"):
+        lo = profile.get("land_owner")
+        if lo is None or str(lo).strip() == "":
+            need("land_owner")
+        else:
+            has_land = str(lo).strip().lower() in ("yes", "true", "1")
+            if has_land != (rule_lo == "yes"):
+                failed = True
+                reasons.append("Scheme requires "
+                               + ("owning" if rule_lo == "yes" else "not owning")
+                               + " agricultural land")
+            else:
+                reasons.append("Land ownership requirement met")
 
     # ---- bank account ----
     if (rule.get("requires_bank_account") or "").strip().lower() == "yes":

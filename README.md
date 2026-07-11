@@ -60,13 +60,46 @@ python tests/test_engine.py     # 7 personas, 19 assertions against scheme_rules
 
 ## Data
 
-- `data/rag_corpus.json` — cleaned scheme documents (from `prepare_scheme_data.py`,
-  parsed from the myScheme portal scrape). Full corpus: **4,682 schemes**.
-- `data/scheme_rules.csv` — manually annotated eligibility rules (Tier 2).
-  Blank cell = criterion not applicable. `female_any_category` in the category
-  column means women of any category qualify (e.g. Stand-Up India).
-  Rows with no annotation at all are ignored by the engine (safety guard:
-  an unannotated template row can never yield an "eligible" verdict).
+- `data/rag_corpus.json` — cleaned scheme documents (from
+  `pipeline/prepare_scheme_data.py`, parsed from the myScheme portal scrape).
+  Full corpus: **4,682 schemes**.
+- `data/scheme_rules.csv` — structured eligibility rules. Each row carries a
+  `rules_source`: `manual` (5 hand-curated gold rows) or `llm` (extracted by
+  `src/extract_rules.py`, see below). Blank cell = criterion not applicable.
+  `female_any_category` in the category column means women of any category
+  qualify (e.g. Stand-Up India). Rows with no structured criteria are ignored
+  by the engine (safety guard: they can never yield an "eligible" verdict —
+  such schemes are describe-only).
+
+## LLM rule extraction (how the engine "knows" schemes)
+
+The LLM plays two separate roles in this project:
+
+1. **Offline data pipeline** — `src/extract_rules.py` reads each scheme's
+   *official* `eligibility_text` and fills the structured rule columns
+   (age/income/gender/category/occupation/...). Conservative by construction:
+   a field is only set when the text states it explicitly; everything else is
+   demoted to free-text `other_conditions`. Output is validated in Python
+   against controlled vocabularies and checkpointed (resumable).
+2. **Online conversation agent** — never decides eligibility. Query-time
+   verdicts come only from the deterministic engine, so they are reproducible,
+   auditable, and instant on a laptop.
+
+**Measured extraction quality**: 88% field-level agreement against the 5
+hand-curated gold rows (qwen3.5:27b); the residual disagreements require
+world knowledge that is absent from the official text (e.g. inferring a bank
+account requirement for a bank-loan scheme). Run the audit yourself:
+`python src/extract_rules.py review --sample 10` shows extracted fields next
+to the source text.
+
+## Data freshness (weekly refresh)
+
+`python pipeline/refresh.py` re-syncs everything with the live portal:
+rescrape (rate-limited, resumable) → rebuild corpus → **content-hash diff** →
+LLM re-extracts *only new/changed schemes* → merge rules (manual rows always
+win) → rebuild embeddings → engine tests must pass. A typical week changes a
+handful of schemes, so a refresh costs minutes, not the full 6-hour backfill.
+Weekly cadence is recommended; `data/refresh_report.json` records each run.
 
 
 ## Semantic retrieval (full-corpus scale)
@@ -103,6 +136,20 @@ prevents it from claiming eligibility for them.
 ## Limitations / responsible use
 
 Results are indicative only — always verify on https://www.myscheme.gov.in
-before applying. Only 5 schemes annotated so far; documents-required and FAQ
-data not yet scraped; English only; local 8B model may occasionally produce
-malformed actions (handled by repair + fallback).
+before applying. Known limitations:
+
+- **LLM-extracted rules are imperfect** (~88% field agreement on the audit
+  set). Extraction errs toward omission (a missed criterion makes the engine
+  say "eligible" too broadly, never "not eligible" wrongly on a stated
+  criterion) — but users must still verify on the official page, which every
+  answer links.
+- Rules coverage is partial: Central schemes prioritized first; remaining
+  State schemes pending the full extraction backfill.
+- `category` mixes social category (SC/ST/OBC/EWS) with economic status
+  (BPL) in one field; a user who is both SC and BPL should state the one the
+  scheme asks about.
+- Occupation matching is exact-token (a "mason" won't match "construction
+  worker" yet).
+- documents-required and FAQ endpoints not yet scraped; English only; small
+  local models occasionally produce malformed actions (handled by JSON
+  repair + code guards + non-LLM fallback).
