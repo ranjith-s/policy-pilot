@@ -1,0 +1,156 @@
+{
+  "sui": {
+    "status": "Success",
+    "statusCode": 200,
+    "errorDescription": "",
+    "error": "{}",
+    "data": {
+      "_id": "62872adf7d5de378dc7ad063",
+      "en": {
+        "faqs": [
+          {
+            "question": "What is the nature and size of the loan under the Stand-Up India Scheme?",
+            "answer": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": " Composite loan (inclusive of term loan and working capital) between 10 lakh and up to 100 lakh representing up to 85% of the project cost would be eligible."
+                  }
+                ]
+              }
+            ],
+            "answer_md": " Composite loan (inclusive of term loan and working capital) between 10 lakh and up to 100 lakh representing up to 85% of the project cost would be eligible.\n"
+          },
+          {
+            "question": "How much will be the interest rate for the loan?",
+            "answer": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "The rate of interest would be lowest applicable rate of the bank for that category (rating category) not to exceed (base rate (MCLR) + 3%+ tenor premium)."
+                  }
+                ]
+              }
+            ],
+            "answer_md": "The rate of interest would be lowest applicable rate of the bank for that category (rating category) not to exceed (base rate (MCLR) + 3%+ tenor premium).\n"
+          },
+          {
+            "question": "By when am I expected to repay the loan?",
+            "answer": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "The loan is repayable in 7 years with a maximum moratorium period of 18 months."
+                  }
+                ]
+              }
+            ],
+            "answer_md": "The loan is repayable in 7 years with a maximum moratorium period of 18 months.\n"
+          },
+          {
+            "question": "Who are the eligible lending institutions for extending loans under the Scheme?",
+            "answer": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "All branches of Scheduled Commercial Banks located across the country."
+                  }
+                ]
+              }
+            ],
+            "answer_md": "All branches of Scheduled Commercial Banks located across the country.\n"
+          },
+          {
+            "question": "What is Hand-holding Support?",
+            "answer": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "Any new entrepreneur requires guidance in his endeavor to set up his or her business enterprise starting from training to filling up loan applications as per bank requirements. "
+                  }
+                ]
+              }
+            ],
+            "answer_md": "Any new entrepreneur requires guidance in his endeavor to set up his or her business enterprise starting from training to filling up loan applications as per bank requirements. \n"
+          },
+          {
+            "question": "How do I get hand-holding support?",
+            "answer": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": " You may navigate through the portal or seek assistance from the nearest branch of a Scheduled Commercial Bank  to help you identify the nature of hand-holding support required. "
+                  }
+                ]
+              }
+            ],
+            "answer_md": " You may navigate through the portal or seek assistance from the nearest branch of a Scheduled Commercial Bank  to help you identify the nature of hand-holding support required. \n"
+          },
+          {
+            "question": "What are the activities for which Stand-Up India loan is provided ?",
+            "answer": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "Stand-Up India loan may be provided to entrepreneurs for engaging in manufacturing, trading, services sectors including activities allied to agriculture.  "
+                  }
+                ]
+              }
+            ],
+            "answer_md": "Stand-Up India loan may be provided to entrepreneurs for engaging in manufacturing, trading, services sectors including activities allied to agriculture.  \n"
+          },
+          {
+            "question": "What are the activities allied to agriculture ?",
+            "answer": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "Under the Stand Up India loan, activities allied to agriculture include pisciculture, beekeeping, poultry, livestock, rearing, grading, sorting, aggregation  agro-industries,  dairy, fishery, agri-clinic and agri-business centres, food and agro processing etc. \n"
+                  }
+                ]
+              }
+            ],
+            "answer_md": "Under the Stand Up India loan, activities allied to agriculture include pisciculture, beekeeping, poultry, livestock, rearing, grading, sorting, aggregation  agro-industries,  dairy, fishery, agri-clinic and agri-business centres, food and agro processing etc. \n\n"
+          },
+          {
+            "question": "What is the purpose of the loan under “Stand-Up India” Scheme?",
+            "answer": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "The scheme is for setting up a new enterprise in manufacturing, trading,  services sector or activities allied to agriculture   by SC/ST and Women entrepreneur.\n"
+                  }
+                ]
+              }
+            ],
+            "answer_md": "The scheme is for setting up a new enterprise in manufacturing, trading,  services sector or activities allied to agriculture   by SC/ST and Women entrepreneur.\n\n"
+          },
+          {
+            "question": " What is the Difference between Stand-Up India Scheme and Start Up India Scheme?",
+            "answer": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "Stand-Up India Scheme is intended to support SC/ST and Women entrepreneurs to set up green field projects through bank branches in India while Start Up India Scheme aims to boost innovative and technology led enterprises for new/existing enterprises."
+                  }
+                ]
+              }
+            ],
+            "answer_md": "Stand-Up India Scheme is intended to support SC/ST and Women entrepreneurs to set up green field projects through bank branches in India while Start Up India Scheme aims to boost innovative and technology led enterprises for new/existing enterprises.\n"
+          }
+        ]
+      },
+      "schemeId": "628727c27d5de378dc7acfe9"
+    }
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "sui": {
+    "status": "Success",
+    "statusCode": 200,
+    "errorDescription": "",
+    "error": "{}",
+    "data": {
+      "_id": "62872a007d5de378dc7ad03e",
+      "en": {
+        "documents_required": [
+          {
+            "type": "ol_list",
+            "children": [
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Proof of Identity: Voter’s ID Card / Passport / Driving License / PAN Card / Signature identification from present bankers of proprietor, partner of director ( if a company)"
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Proof of Residence: Recent telephone bills, electricity bill, property tax receipt /Passport / voter’s ID Card of Proprietor, partner of Director (if a company)"
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Proof of Business Address"
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Proof that the applicant is not a defaulter in any Bank / Financial Institution"
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Memorandum and articles of association of the Company / Partnership Deed of partners etc."
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Assets and liabilities statement of promoters and guarantors along with latest income tax returns."
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Rent Agreement (if business premises on rent) and clearance from pollution control board if applicable."
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "SSI / MSME registration (if applicable)"
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Projected balance sheets for the next two years in case of working capital limits and for the period of the loan in case of term loan."
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Photocopies of lease deeds/ title deeds of all the properties being offered as primary and collateral securities."
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Documents to establish whether the applicant belongs to SC/ST Category, wherever applicable."
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Certificate of incorporation from ROC to establish whether majority stake holding in the company is in the hands of a person who belongs to SC/ST/Woman category."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "For cases with exposure above ₹ 25 Lakhs:",
+                "bold": true,
+                "underline": true
+              }
+            ]
+          },
+          {
+            "type": "ol_list",
+            "children": [
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Profile of the unit (includes names of promoters, other directors in the company, the activity being undertaken addresses of all offices and plants, shareholding pattern etc."
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Last three years balance sheets of the Associate / Group Companies (if any)."
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Project report (for the proposed project if term funding is required) containing details of the machinery to be acquired, from whom to be acquired, price, names of suppliers, financial details like capacity of machines, capacity of utilization assumed, production, sales, projected profit and loss and balance sheets for the tenor of the loan, the details of labour, staff to be hired, basis of assumption of such financial details etc."
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "children": [
+                  {
+                    "text": "Manufacturing process if applicable, major profile of executives in the company, any tie-ups, details about raw material used and their suppliers, details about the buyers, details about major-competitors and the company’s strength and weaknesses as compared to their competitors etc."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              }
+            ]
+          }
+        ],
+        "documentsRequired_md": "\n1. Proof of Identity: Voter’s ID Card / Passport / Driving License / PAN Card / Signature identification from present bankers of proprietor, partner of director ( if a company)\n1. Proof of Residence: Recent telephone bills, electricity bill, property tax receipt /Passport / voter’s ID Card of Proprietor, partner of Director (if a company)\n1. Proof of Business Address\n1. Proof that the applicant is not a defaulter in any Bank / Financial Institution\n1. Memorandum and articles of association of the Company / Partnership Deed of partners etc.\n1. Assets and liabilities statement of promoters and guarantors along with latest income tax returns.\n1. Rent Agreement (if business premises on rent) and clearance from pollution control board if applicable.\n1. SSI / MSME registration (if applicable)\n1. Projected balance sheets for the next two years in case of working capital limits and for the period of the loan in case of term loan.\n1. Photocopies of lease deeds/ title deeds of all the properties being offered as primary and collateral securities.\n1. Documents to establish whether the applicant belongs to SC/ST Category, wherever applicable.\n1. Certificate of incorporation from ROC to establish whether majority stake holding in the company is in the hands of a person who belongs to SC/ST/Woman category.\n\n**For cases with exposure above ₹ 25 Lakhs:**\n\n1. Profile of the unit (includes names of promoters, other directors in the company, the activity being undertaken addresses of all offices and plants, shareholding pattern etc.\n1. Last three years balance sheets of the Associate / Group Companies (if any).\n1. Project report (for the proposed project if term funding is required) containing details of the machinery to be acquired, from whom to be acquired, price, names of suppliers, financial details like capacity of machines, capacity of utilization assumed, production, sales, projected profit and loss and balance sheets for the tenor of the loan, the details of labour, staff to be hired, basis of assumption of such financial details etc.\n1. Manufacturing process if applicable, major profile of executives in the company, any tie-ups, details about raw material used and their suppliers, details about the buyers, details about major-competitors and the company’s strength and weaknesses as compared to their competitors etc.\n\n<br>\n\n"
+      },
+      "schemeId": "628727c27d5de378dc7acfe9"
+    }
+  }
+}

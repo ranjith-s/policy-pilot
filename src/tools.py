@@ -188,7 +188,11 @@ def get_scheme_details(scheme_id, **_):
         "benefits": d["benefits"][:800],
         "eligibility_text": d["eligibility_text"][:800],
         "application": d["application"],
-        "documents_required": d["documents_required"],
+        "documents_required": d["documents_required"][:15],
+        # official FAQs (from the portal's FAQ API) — quote these when the
+        # user asks practical questions (amounts, timelines, how to apply)
+        "faqs": [{"q": f["question"], "a": f["answer"][:300]}
+                 for f in (d.get("faqs") or [])[:3]],
     }
 
 
