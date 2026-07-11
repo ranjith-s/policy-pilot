@@ -19,9 +19,20 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from agent import Agent
 from llm import OllamaClient, GeminiClient, OpenAIClient, MockLLM
+import tools
+
+
+@st.cache_resource
+def warm_caches():
+    """Preload the 38 MB corpus + semantic index once per server process so
+    the first search of a session doesn't stall."""
+    tools._corpus()
+    tools._get_semantic_index()
+    return True
 
 st.set_page_config(page_title="Scheme Eligibility Assistant", page_icon="🏛️",
                    layout="wide", initial_sidebar_state="expanded")
+warm_caches()
 
 # ------------------------------------------------------------------ style --
 st.markdown("""
@@ -228,7 +239,8 @@ if prompt:
     with st.chat_message("assistant"):
         status = st.status("🤔 thinking…", expanded=True)
         agent.on_step = lambda act: status.write(
-            STEP_LABELS.get(act["action"], act["action"]))
+            STEP_LABELS.get(act["action"], act["action"])
+            + (f" · {act['elapsed']}s" if act.get("elapsed") else ""))
         try:
             if st.session_state.pending_question:
                 result = agent.answer_question(prompt)

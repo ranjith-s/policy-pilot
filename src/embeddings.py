@@ -106,7 +106,9 @@ class SemanticIndex:
         return EMB_PATH.exists() and IDS_PATH.exists()
 
     def query(self, text, top_k=10, restrict_ids=None):
-        q = self.embedder.embed(text)
+        # fail fast at query time: if the embedding service is down we want
+        # an instant keyword fallback, not retry backoff (build keeps retries)
+        q = self.embedder.embed(text, retries=0)
         q /= (np.linalg.norm(q) + 1e-9)
         scores = self.mat @ q                      # cosine (rows pre-normalised)
         order = np.argsort(-scores)

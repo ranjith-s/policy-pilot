@@ -72,7 +72,7 @@ def _metadata_filter(state=None, category=None):
     return out
 
 
-def search_schemes(query="", state=None, category=None, max_results=5, **_):
+def search_schemes(query="", state=None, category=None, max_results=4, **_):
     """Hybrid retrieval: metadata hard-filter -> semantic (if index built)
     blended with keyword score. Falls back to pure keyword when the
     embedding index or Ollama is unavailable."""
@@ -125,7 +125,7 @@ def search_schemes(query="", state=None, category=None, max_results=5, **_):
                 "scheme_name": d["scheme_name"],
                 "level": d["level"],
                 "states": d["states"],
-                "brief": d["brief_description"][:200],
+                "brief": d["brief_description"][:120],
                 # can the engine actually verdict this scheme?
                 "rules_available": d["id"] in _rules_ids(),
             }
@@ -196,11 +196,21 @@ def get_scheme_details(scheme_id, **_):
     }
 
 
-def update_profile(profile_store, field, value, **_):
-    """Write a fact into the session profile (agent memory)."""
-    if field not in KNOWN_FIELDS:
-        return {"error": f"unknown field '{field}'. Known: {KNOWN_FIELDS}"}
-    profile_store[field] = value
+def update_profile(profile_store, field=None, value=None, fields=None, **_):
+    """Write facts into the session profile (agent memory).
+
+    Accepts either the batched form {"fields": {...}} (preferred — one LLM
+    step saves everything) or the legacy {"field", "value"} pair.
+    """
+    batch = dict(fields) if isinstance(fields, dict) else {}
+    if field is not None:
+        batch[field] = value
+    if not batch:
+        return {"error": "provide 'fields' (dict) or 'field' + 'value'"}
+    unknown = [k for k in batch if k not in KNOWN_FIELDS]
+    if unknown:
+        return {"error": f"unknown fields {unknown}. Known: {KNOWN_FIELDS}"}
+    profile_store.update(batch)
     return {"ok": True, "profile": dict(profile_store)}
 
 
@@ -224,10 +234,11 @@ Available tools (choose exactly one per step):
 3. get_scheme_details — benefits + application steps for one scheme.
    input: {"scheme_id": "sui"}
 
-4. update_profile — save a fact the user just told you.
-   input: {"field": "age", "value": 34}
-   fields: age, annual_income, gender, category, occupation, state,
-           marital_status, has_bank_account, land_owner
+4. update_profile — save what the user told you. Save ALL facts from the
+   user's message in ONE call:
+   input: {"fields": {"age": 34, "occupation": "artist", "annual_income": 40000}}
+   allowed fields: age, annual_income, gender, category, occupation, state,
+                   marital_status, has_bank_account, land_owner
 
 5. ask_user — ask the user ONE question when required info is missing.
    input: {"question": "What is your annual income?"}
@@ -246,8 +257,8 @@ def dispatch(action, action_input, profile_store):
     if action == "get_scheme_details":
         return get_scheme_details(**action_input)
     if action == "update_profile":
-        # Validate required parameters
-        if "field" not in action_input or "value" not in action_input:
-            return {"error": f"update_profile requires 'field' and 'value', got {list(action_input.keys())}"}
+        if not ({"field", "value"} <= set(action_input) or "fields" in action_input):
+            return {"error": "update_profile needs 'fields' (dict) or "
+                             f"'field' + 'value', got {list(action_input.keys())}"}
         return update_profile(profile_store, **action_input)
     return {"error": f"unknown tool '{action}'"}

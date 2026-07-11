@@ -33,7 +33,7 @@ You work step by step. At every step respond with ONLY one JSON object:
 
 STRICT RULES:
 - NEVER state or guess eligibility yourself. Verdicts come ONLY from run_eligibility_check.
-- When the user tells you facts, save EVERY one with update_profile BEFORE checking eligibility — including occupation (artist, farmer, entrepreneur, faculty...), age, income, gender, state, marital status.
+- When the user tells you facts, save ALL of them in ONE update_profile call using "fields" BEFORE checking eligibility — including occupation (artist, farmer, entrepreneur, faculty...), age, income, gender, state, marital status.
 - In search_schemes, only pass "state" if the user named their state; only pass "category" if clearly needed. When unsure, use query words alone.
 - ALWAYS call run_eligibility_check once after saving the user's facts. It checks every rule-annotated scheme at once — even schemes search did not return — so run it even if search results look unpromising.
 - If run_eligibility_check reports a suggested_next_question and you have questions left, use ask_user with it. One question at a time.
@@ -124,6 +124,7 @@ class Agent:
         engine_ran_this_turn = False
 
         for step_no in range(1, MAX_STEPS + 1):
+            t0 = time.time()
             raw = self.llm.chat(self.messages)
 
             try:
@@ -141,7 +142,9 @@ class Agent:
                     self._trace(event="parse_failure", raw=raw[:300])
                     return self._fallback(steps)
 
-            self.messages.append({"role": "assistant", "content": json.dumps(act)})
+            act["elapsed"] = round(time.time() - t0, 1)   # LLM think time
+            self.messages.append({"role": "assistant", "content": json.dumps(
+                {k: act[k] for k in ("thought", "action", "action_input")})})
             self._trace(event="agent_step", step=step_no, **act)
             steps.append(act)
             if self.on_step:

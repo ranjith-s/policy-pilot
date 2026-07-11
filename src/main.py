@@ -50,7 +50,8 @@ def make_step_printer(show_trace):
     """Live progress line per agent step, so the CLI never looks frozen."""
     def on_step(act):
         label = STEP_LABELS.get(act["action"], act["action"])
-        print(f"  … {label}", flush=True)
+        took = f" ({act['elapsed']}s)" if act.get("elapsed") else ""
+        print(f"  … {label}{took}", flush=True)
         if show_trace:
             print(f"      {act['action']}({act['action_input']})", flush=True)
             if act.get("thought"):
