@@ -8,7 +8,7 @@ call each turn; this module executes it and returns an observation dict.
 import json
 from pathlib import Path
 
-from engine import check_eligibility, get_next_question, KNOWN_FIELDS
+from engine import check_eligibility, get_next_question, KNOWN_FIELDS, _is_annotated
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
@@ -38,7 +38,7 @@ def _rules_ids():
     if _rules_ids_cache is None:
         import csv
         with open(DATA_DIR / "scheme_rules.csv", newline="", encoding="utf-8") as f:
-            _rules_ids_cache = {row["id"] for row in csv.DictReader(f)}
+            _rules_ids_cache = {row["id"] for row in csv.DictReader(f) if _is_annotated(row)}
     return _rules_ids_cache
 
 
@@ -58,6 +58,9 @@ def _get_semantic_index():
 
 def _metadata_filter(state=None, category=None):
     """Tier-1 hard filter. Returns list of candidate docs."""
+    # 'India' / 'all' is not a state — treat as no filter
+    if state and state.strip().lower() in ("india", "all", "all india", "any"):
+        state = None
     out = []
     for d in _corpus().values():
         if state and state.lower() not in [s.lower() for s in d["states"]] \
@@ -108,8 +111,14 @@ def search_schemes(query="", state=None, category=None, max_results=5, **_):
             key=lambda x: -x[0],
         )
 
+    result_hint = None
+    if not ranked and (state or category):
+        result_hint = ("No matches with these filters. Retry with query words "
+                       "only — no state/category filter.")
+
     return {
         "retrieval_mode": mode,
+        **({"hint": result_hint} if result_hint else {}),
         "matches": [
             {
                 "scheme_id": d["id"],

@@ -24,8 +24,13 @@ Toolbox (src/tools.py)
 
 ### Guardrails (enforced in code, not just prompt)
 - **Verdict guard** — a `final_answer` claiming eligibility is rejected unless
-  the engine's latest run actually returned that scheme as eligible.
-- **Loop cap** — max 6 tool calls per user turn.
+  the engine's latest run actually returned that scheme as eligible; any
+  non-eligible scheme it names must carry a qualifier ("possibly eligible",
+  "more info needed") on the same line.
+- **Engine-first guard** — with profile facts on file, a `final_answer` is
+  rejected unless `run_eligibility_check` was called in the current turn
+  (stale verdicts from earlier turns don't count).
+- **Loop cap** — max 8 tool calls per user turn.
 - **Question cap** — max 2 `ask_user` rounds per conversation, then best-effort answer.
 - **JSON repair** — one retry on malformed LLM output, then a non-LLM fallback
   answer built from the engine's last results (a demo can never dead-end).
@@ -34,8 +39,11 @@ Toolbox (src/tools.py)
 ## Run
 
 ```bash
-# with local Ollama (needs `ollama pull llama3.1` and ollama serving)
+# with local Ollama (needs `ollama pull qwen2.5:7b` and ollama serving)
 python src/main.py --show-trace
+
+# pick a different local model
+python src/main.py --model qwen3:4b-instruct
 
 # without Ollama (scripted MockLLM, exercises the full loop deterministically)
 python src/main.py --mock --show-trace
@@ -53,11 +61,12 @@ python tests/test_engine.py     # 7 personas, 19 assertions against scheme_rules
 ## Data
 
 - `data/rag_corpus.json` — cleaned scheme documents (from `prepare_scheme_data.py`,
-  parsed from myScheme portal scrape). Currently 5 sample schemes; the pipeline
-  scales to the full ~4000-scheme scrape unchanged.
+  parsed from the myScheme portal scrape). Full corpus: **4,682 schemes**.
 - `data/scheme_rules.csv` — manually annotated eligibility rules (Tier 2).
   Blank cell = criterion not applicable. `female_any_category` in the category
   column means women of any category qualify (e.g. Stand-Up India).
+  Rows with no annotation at all are ignored by the engine (safety guard:
+  an unannotated template row can never yield an "eligible" verdict).
 
 
 ## Semantic retrieval (full-corpus scale)

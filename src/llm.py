@@ -9,11 +9,13 @@ Both expose .chat(messages) -> str
 """
 
 import json
+import time
+import urllib.error
 import urllib.request
 
 
 class OllamaClient:
-    def __init__(self, model="llama3.1", host="http://localhost:11434", temperature=0.1):
+    def __init__(self, model="qwen3:4b-instruct", host="http://localhost:11434", temperature=0.0):
         self.model = model
         self.host = host
         self.temperature = temperature
@@ -31,9 +33,17 @@ class OllamaClient:
             data=json.dumps(payload).encode(),
             headers={"Content-Type": "application/json"},
         )
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            data = json.loads(resp.read())
-        return data["message"]["content"]
+        # retry transient errors once (model loading / swap on small GPUs
+        # can cause a slow first response or a spurious 500)
+        for attempt in (1, 2):
+            try:
+                with urllib.request.urlopen(req, timeout=300) as resp:
+                    data = json.loads(resp.read())
+                return data["message"]["content"]
+            except (urllib.error.HTTPError, TimeoutError, OSError):
+                if attempt == 2:
+                    raise
+                time.sleep(3)
 
 
 class MockLLM:

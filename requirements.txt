@@ -1,4 +1,5 @@
-# stdlib only — no external dependencies for the CLI prototype
+# CLI prototype dependencies
 # (Ollama runs as a separate local service: https://ollama.com)
+numpy          # semantic retrieval (cosine search over precomputed embeddings)
 # For the later Streamlit UI phase, add:
 # streamlit

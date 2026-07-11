@@ -21,7 +21,7 @@ from pathlib import Path
 from tools import TOOL_SCHEMAS, dispatch
 
 LOGS_DIR = Path(__file__).resolve().parent.parent / "logs"
-MAX_STEPS = 6
+MAX_STEPS = 8
 MAX_QUESTIONS = 2
 
 SYSTEM_PROMPT = f"""You are a Public Scheme Eligibility Assistant agent for Indian government welfare schemes.
@@ -33,7 +33,9 @@ You work step by step. At every step respond with ONLY one JSON object:
 
 STRICT RULES:
 - NEVER state or guess eligibility yourself. Verdicts come ONLY from run_eligibility_check.
-- When the user tells you facts (age, occupation, income...), save each with update_profile BEFORE checking eligibility.
+- When the user tells you facts, save EVERY one with update_profile BEFORE checking eligibility — including occupation (artist, farmer, entrepreneur, faculty...), age, income, gender, state, marital status.
+- In search_schemes, only pass "state" if the user named their state; only pass "category" if clearly needed. When unsure, use query words alone.
+- ALWAYS call run_eligibility_check once after saving the user's facts. It checks every rule-annotated scheme at once — even schemes search did not return — so run it even if search results look unpromising.
 - If run_eligibility_check reports a suggested_next_question and you have questions left, use ask_user with it. One question at a time.
 - In your final_answer: state eligible schemes with reasons, required documents, and how to apply. Always add: "This is indicative only — verify on the official myScheme portal before applying."
 - If nothing matches, say so honestly and suggest the nearest Common Service Centre.
@@ -69,34 +71,45 @@ class Agent:
             if not m:
                 raise
             obj = json.loads(m.group(0))
-        if "action" not in obj:
+        if not isinstance(obj, dict) or "action" not in obj:
             raise ValueError("no 'action' key")
         obj.setdefault("thought", "")
         obj.setdefault("action_input", {})
+        # small local models sometimes emit action_input as a bare string;
+        # coerce it into the dict shape each tool expects
+        if not isinstance(obj["action_input"], dict):
+            key = {"final_answer": "answer", "ask_user": "question",
+                   "search_schemes": "query"}.get(obj["action"])
+            obj["action_input"] = {key: obj["action_input"]} if key else {}
         return obj
 
     def _violates_verdict_guard(self, answer_text):
         """True if the answer claims eligibility for a scheme the engine
-        did not mark eligible in its most recent run."""
+        did not mark eligible in its most recent run.
+
+        Strict by design: in an answer that makes a positive eligibility
+        claim, every named non-eligible scheme must carry a qualifier
+        ("possibly eligible", "more info needed"...) on the same line —
+        otherwise the answer is rejected. Errs on the safe side.
+        """
         text = answer_text.lower()
         if "eligible" not in text:
             return False
         if not self.last_engine_result:
             return True  # claiming eligibility without ever running the engine
-        ok = [s.lower() for s in self.last_engine_result["summary"]["eligible"]]
-        claimed = [
-            r["scheme_name"].lower()
-            for r in self.last_engine_result["results"]
-            if r["scheme_name"].lower() in text
-            and re.search(r"(?<!not )eligible", text)
-        ]
-        # any scheme named in an eligibility context that isn't engine-approved?
+        if not re.search(r"(?<!not )(?<!not-)eligible", text):
+            return False  # only negative mentions ("not eligible")
+        qualifiers = ("not eligible", "possibly eligible", "may be eligible",
+                      "might be eligible", "partial", "more info",
+                      "more information", "cannot verify", "could not verify",
+                      "couldn't verify", "unable to verify")
         for r in self.last_engine_result["results"]:
             name = r["scheme_name"].lower()
-            if name in text and r["status"] != "eligible" \
-                    and re.search(rf"eligible[^.]*{re.escape(name)}|{re.escape(name)}[^.]*eligible", text) \
-                    and f"not eligible" not in text.split(name)[0][-30:]:
-                return True
+            if r["status"] == "eligible" or name not in text:
+                continue
+            for line in text.splitlines():
+                if name in line and not any(q in line for q in qualifiers):
+                    return True
         return False
 
     # ------------------------------------------------------------------ #
@@ -106,6 +119,7 @@ class Agent:
         self.messages.append({"role": "user", "content": user_message})
         self._trace(event="user_message", text=user_message)
         steps = []
+        engine_ran_this_turn = False
 
         for step_no in range(1, MAX_STEPS + 1):
             raw = self.llm.chat(self.messages)
@@ -133,6 +147,20 @@ class Agent:
             # ---- terminal actions ----
             if action == "final_answer":
                 answer = inp.get("answer", "")
+                # engine-first guard: with profile facts on file, the engine
+                # must have been consulted THIS turn (fresh data) before any
+                # final answer
+                if self.profile and not engine_ran_this_turn \
+                        and step_no < MAX_STEPS:
+                    self._trace(event="engine_first_guard_triggered")
+                    self.messages.append({
+                        "role": "user",
+                        "content": "GUARD: answer rejected — run_eligibility_check was "
+                                   "not called this turn. First save any new fact the "
+                                   "user just gave with update_profile, then call "
+                                   "run_eligibility_check, then answer from its verdicts.",
+                    })
+                    continue
                 if self._violates_verdict_guard(answer):
                     self._trace(event="verdict_guard_triggered", answer=answer[:200])
                     self.messages.append({
@@ -162,6 +190,7 @@ class Agent:
             obs = dispatch(action, inp, self.profile)
             if action == "run_eligibility_check" and "results" in obs:
                 self.last_engine_result = obs
+                engine_ran_this_turn = True
             self._trace(event="observation", tool=action,
                         observation=json.dumps(obs)[:1000])
             self.messages.append({

@@ -13,6 +13,7 @@ Design:
 
 import json
 import sys
+import time
 import urllib.request
 from pathlib import Path
 
@@ -27,14 +28,29 @@ class OllamaEmbedder:
     def __init__(self, model="nomic-embed-text", host="http://localhost:11434"):
         self.model, self.host = model, host
 
-    def embed(self, text):
+    def embed_batch(self, texts, retries=3):
+        """Embed a list of texts in one call (/api/embed batch endpoint —
+        far faster than one HTTP request per text)."""
         req = urllib.request.Request(
-            f"{self.host}/api/embeddings",
-            data=json.dumps({"model": self.model, "prompt": text[:2000]}).encode(),
+            f"{self.host}/api/embed",
+            data=json.dumps({"model": self.model,
+                             "input": [t[:2000] for t in texts]}).encode(),
             headers={"Content-Type": "application/json"},
         )
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            return np.array(json.loads(resp.read())["embedding"], dtype=np.float32)
+        # first call after a model swap can be slow (model loading on a small
+        # GPU); retry transient timeouts with backoff instead of dying
+        for attempt in range(retries + 1):
+            try:
+                with urllib.request.urlopen(req, timeout=300) as resp:
+                    data = json.loads(resp.read())
+                return np.array(data["embeddings"], dtype=np.float32)
+            except (TimeoutError, OSError):
+                if attempt == retries:
+                    raise
+                time.sleep(2 ** attempt)
+
+    def embed(self, text, retries=3):
+        return self.embed_batch([text], retries=retries)[0]
 
 
 def _doc_text(doc):
@@ -58,14 +74,17 @@ def build_index(embedder=None, corpus_path=None, verbose=True):
     with open(corpus_path or DATA_DIR / "rag_corpus.json", encoding="utf-8") as f:
         docs = json.load(f)
 
-    vecs, ids = [], []
-    for i, d in enumerate(docs, 1):
-        vecs.append(embedder.embed(_doc_text(d)))
-        ids.append(d["id"])
-        if verbose and (i % 100 == 0 or i == len(docs)):
-            print(f"  embedded {i}/{len(docs)}")
+    ids = [d["id"] for d in docs]
+    texts = [_doc_text(d) for d in docs]
 
-    mat = np.vstack(vecs)
+    BATCH = 64
+    chunks = []
+    for i in range(0, len(texts), BATCH):
+        chunks.append(embedder.embed_batch(texts[i:i + BATCH]))
+        if verbose:
+            print(f"  embedded {min(i + BATCH, len(texts))}/{len(texts)}", flush=True)
+
+    mat = np.vstack(chunks)
     mat /= (np.linalg.norm(mat, axis=1, keepdims=True) + 1e-9)  # pre-normalise
     np.save(EMB_PATH, mat)
     IDS_PATH.write_text(json.dumps(ids))

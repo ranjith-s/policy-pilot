@@ -30,10 +30,23 @@ FIELD_QUESTIONS = {
 }
 
 
+# columns that count as an actual annotation; a row where ALL of these are
+# blank is an unannotated template row and must never produce a verdict
+ANNOTATION_COLUMNS = [
+    "age_min", "age_max", "income_max_annual", "gender", "category",
+    "occupation", "marital_status", "requires_bank_account", "land_owner",
+    "other_conditions", "documents_required",
+]
+
+
+def _is_annotated(row):
+    return any((row.get(c) or "").strip() for c in ANNOTATION_COLUMNS)
+
+
 def _load_rules(rules_csv=None):
     path = Path(rules_csv) if rules_csv else DATA_DIR / "scheme_rules.csv"
     with open(path, newline="", encoding="utf-8") as f:
-        return list(csv.DictReader(f))
+        return [r for r in csv.DictReader(f) if _is_annotated(r)]
 
 
 def _num(value):

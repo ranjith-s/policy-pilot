@@ -12,6 +12,10 @@ import argparse
 import sys
 from pathlib import Path
 
+# Windows consoles default to cp1252, which can't print ₹ etc.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from agent import Agent
@@ -42,7 +46,7 @@ def print_steps(steps):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mock", action="store_true", help="use scripted MockLLM (no Ollama)")
-    ap.add_argument("--model", default="llama3.1")
+    ap.add_argument("--model", default="qwen3:4b-instruct")
     ap.add_argument("--host", default="http://localhost:11434")
     ap.add_argument("--show-trace", action="store_true", help="print agent steps live")
     args = ap.parse_args()
@@ -75,7 +79,12 @@ def main():
             print("(new session)")
             continue
 
-        result = agent.answer_question(user) if pending_question else agent.run_turn(user)
+        try:
+            result = agent.answer_question(user) if pending_question else agent.run_turn(user)
+        except Exception as e:
+            print(f"\n[error] LLM backend failed ({e}). Is Ollama running "
+                  f"and the model pulled? Try again, or use --mock.\n")
+            continue
         pending_question = result["type"] == "question"
 
         if args.show_trace:
