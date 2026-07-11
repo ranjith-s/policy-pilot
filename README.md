@@ -39,13 +39,17 @@ Toolbox (src/tools.py)
 ## Run
 
 ```bash
-# with local Ollama (needs `ollama pull qwen2.5:7b` and ollama serving)
+# web UI (recommended for demos) — http://localhost:8501
+streamlit run app/app.py
+
+# CLI with local Ollama (needs `ollama pull qwen3:4b-instruct` and ollama serving)
 python src/main.py --show-trace
 
 # pick a different local model
-python src/main.py --model qwen3:4b-instruct
+python src/main.py --model qwen2.5:7b
 
-# without Ollama (scripted MockLLM, exercises the full loop deterministically)
+# without Ollama (scripted MockLLM, exercises the full loop deterministically;
+# the UI has the same toggle in its sidebar)
 python src/main.py --mock --show-trace
 ```
 

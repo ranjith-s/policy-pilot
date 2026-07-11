@@ -1,5 +1,3 @@
-# CLI prototype dependencies
 # (Ollama runs as a separate local service: https://ollama.com)
 numpy          # semantic retrieval (cosine search over precomputed embeddings)
-# For the later Streamlit UI phase, add:
-# streamlit
+streamlit      # web UI (app/app.py); CLI works without it
