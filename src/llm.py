@@ -18,10 +18,14 @@ import urllib.request
 
 
 class OllamaClient:
-    def __init__(self, model="qwen3:4b-instruct", host="http://localhost:11434", temperature=0.0):
+    def __init__(self, model="qwen3:4b-instruct", host="http://localhost:11434",
+                 temperature=0.0, num_ctx=8192):
         self.model = model
         self.host = host
         self.temperature = temperature
+        # pin the context window: hosts with a big default (32k) allocate a
+        # KV cache that can overflow VRAM and silently spill to CPU
+        self.num_ctx = num_ctx
 
     def chat(self, messages):
         payload = {
@@ -34,7 +38,7 @@ class OllamaClient:
             # JSON with format-constrained output — disable; non-thinking
             # models reject the flag with a 400, handled below
             "think": False,
-            "options": {"temperature": self.temperature},
+            "options": {"temperature": self.temperature, "num_ctx": self.num_ctx},
         }
         # retry transient errors once (model loading / swap on small GPUs
         # can cause a slow first response or a spurious 500)
