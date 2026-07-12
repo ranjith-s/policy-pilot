@@ -5,7 +5,8 @@ export default function QuestionCard({ nextQuestion, started, busy, onSubmit }) 
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (!busy) inputRef.current?.focus();
+    // preventScroll: focusing the input must not yank the page down to it
+    if (!busy) inputRef.current?.focus({ preventScroll: true });
   }, [busy, nextQuestion?.question]);
 
   const submit = (e) => {

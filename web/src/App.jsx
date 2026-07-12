@@ -49,10 +49,11 @@ export default function App() {
         const out = await r.json();
         setSessionId(out.session_id);
         if (out.data) {
+          const d = out.data;
+          const isPage = d.page_start.eligible > 0 || d.page_start.candidates > 0;
           setData((prev) => {
-            const d = out.data;
             // 'more' pages arrive with a non-zero cursor: append, don't replace
-            if (prev && (d.page_start.eligible > 0 || d.page_start.candidates > 0)) {
+            if (prev && isPage) {
               return {
                 ...d,
                 eligible: [...prev.eligible, ...d.eligible],
@@ -62,6 +63,8 @@ export default function App() {
             }
             return d;
           });
+          // fresh results: read from the top; 'more': keep reading position
+          if (!isPage) window.scrollTo({ top: 0 });
         }
       } catch (e) {
         setError(

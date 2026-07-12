@@ -7,6 +7,9 @@ body {
   font-size: 15px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  /* results are inserted above the focused input — without this the
+     browser "anchors" to the input and yanks the page to the bottom */
+  overflow-anchor: none;
 }
 a { color: var(--teal); text-decoration: none; }
 a:hover, a:focus-visible { text-decoration: underline; }
