@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from agent import Agent
+from funnel import FunnelAgent
 from llm import OllamaClient, GeminiClient, OpenAIClient, MockLLM
 import tools
 
@@ -91,6 +92,8 @@ STEP_LABELS = {
     "update_profile": "📝 noting your details",
     "ask_user": "❓ preparing a question",
     "final_answer": "✅ writing the answer",
+    "rank_schemes": "📊 ranking results",
+    "show_more": "📚 paging results",
 }
 
 EXAMPLES = [
@@ -116,6 +119,11 @@ def coverage_stats():
 # ---------------------------------------------------------------- sidebar --
 with st.sidebar:
     st.title("🏛️ Scheme Assistant")
+    mode = st.radio("Conversation mode",
+                    ["Guided funnel (recommended)", "Free ReAct agent"],
+                    help="Guided: code drives the flow, one LLM call per turn, "
+                         "always shows candidates + a follow-up question. "
+                         "ReAct: the LLM picks tools each step (slower, freer).")
     backend = st.radio("LLM backend",
                        ["Local Ollama", "Google Gemini", "OpenAI (ChatGPT)",
                         "Mock (no LLM)"],
@@ -198,14 +206,15 @@ def make_agent():
         llm = OpenAIClient(model=model, api_key=api_key)
     else:
         llm = OllamaClient(model=model, host=host)
-    return Agent(llm)
+    cls = FunnelAgent if mode.startswith("Guided") else Agent
+    return cls(llm)
 
 
 if backend in ("Google Gemini", "OpenAI (ChatGPT)") and not api_key:
     st.info("Enter your API key in the sidebar to start.")
     st.stop()
 
-config = (backend, model, host, api_key)
+config = (mode, backend, model, host, api_key)
 if "agent" not in st.session_state or st.session_state.get("config") != config:
     st.session_state.agent = make_agent()
     st.session_state.config = config
@@ -256,6 +265,7 @@ if prompt:
         st.session_state.pending_question = result["type"] == "question"
         st.session_state.last_steps = result["steps"]
         prefix = "**The agent asks:** " if st.session_state.pending_question else ""
-        st.markdown(prefix + result["text"])
-    st.session_state.chat.append(("assistant", prefix + result["text"]))
+        shown = prefix + result["text"].replace("\n", "  \n")  # markdown hard breaks
+        st.markdown(shown)
+    st.session_state.chat.append(("assistant", shown))
     st.rerun()

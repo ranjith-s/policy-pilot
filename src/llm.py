@@ -12,6 +12,7 @@ All expose .chat(messages) -> str
 
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.request
@@ -169,7 +170,43 @@ class MockLLM:
     every code path (search -> update -> check -> ask -> details -> answer).
     """
 
+    OCCUPATIONS = ("farmer", "artist", "student", "entrepreneur", "fisherman",
+                   "weaver", "journalist", "faculty", "artisan", "mason")
+    STATES = ("tamil nadu", "kerala", "delhi", "karnataka", "maharashtra",
+              "punjab", "gujarat", "rajasthan", "bihar", "west bengal",
+              "uttar pradesh", "telangana", "andhra pradesh", "odisha", "assam")
+
+    def _mock_extract(self, text):
+        """Regex stand-in for the funnel's fact-extraction call."""
+        low, fields = text.lower(), {}
+        for occ in self.OCCUPATIONS:
+            if occ in low:
+                fields["occupation"] = occ
+                break
+        for state in self.STATES:
+            if state in low:
+                fields["state"] = state.title()
+                break
+        if "widow" in low:
+            fields["marital_status"] = "widow"
+        nums = [int(n.replace(",", "")) for n in re.findall(r"\d[\d,]*", low)]
+        for n in nums:
+            if 10 <= n <= 99 and "age" not in fields:
+                fields["age"] = n
+            elif n >= 1000 and "annual_income" not in fields:
+                fields["annual_income"] = n
+        topics = ("loan", "pension", "scholarship", "insurance", "housing",
+                  "irrigation", "business", "education")
+        keywords = " ".join(w for w in (fields.get("occupation", ""),
+                                        *[t for t in topics if t in low]) if w)
+        return json.dumps({"fields": fields, "keywords": keywords})
+
     def chat(self, messages):
+        # funnel-mode fact extraction has its own system prompt
+        if messages and messages[0]["role"] == "system" \
+                and messages[0]["content"].startswith("You extract structured facts"):
+            return self._mock_extract(messages[-1]["content"])
+
         transcript = json.dumps(messages).lower()
         last = messages[-1]["content"].lower()
 

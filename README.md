@@ -23,6 +23,29 @@ extracting structured rules from official eligibility text.
 
 ## Architecture
 
+Two conversation modes share the same engine, retrieval, and data — a
+deliberate design comparison for the Agentic AI course:
+
+### Guided funnel (default) — `src/funnel.py`
+
+The conversation **policy is code**; the LLM's only job is extracting facts
+from free text. Per user turn: exactly **one LLM call** (fact + topic-word
+extraction) → deterministic engine over all rules (~40 ms) →
+**relevance-blended ranking** (semantic similarity of the user's own words to
+each scheme, blended 65/35 with rule specificity; keyword fallback if the
+embedding service is down) → templated answer showing *confirmed eligible* +
+*likely candidates with their missing facts* + the single
+highest-information follow-up question (chosen from what blocks the user's
+TOP candidates). `more` pages deeper with **zero** LLM calls. Result: ~8 s
+per turn on a 4 GB GPU, wide-net-then-narrow funnel guaranteed by
+construction.
+
+### Free ReAct agent (`--react`) — `src/agent.py`
+
+The LLM picks a tool each step (the classic agent loop below). More flexible,
+but a small local model may skip follow-ups or write slow, long answers —
+measured failure modes that motivated the funnel (see the trace logs).
+
 ```
 User (CLI or Streamlit UI)
    │
@@ -171,8 +194,9 @@ pip install -r requirements.txt        # numpy + streamlit; Ollama separate
 # Web UI (recommended) — http://localhost:8501
 streamlit run app/app.py
 
-# CLI
+# CLI (guided funnel by default)
 python src/main.py --show-trace        # local Ollama (pull qwen3:4b-instruct)
+python src/main.py --react             # free ReAct agent mode (comparison)
 python src/main.py --gemini            # cloud (set GEMINI_API_KEY)
 python src/main.py --mock --show-trace # no LLM needed (scripted demo)
 ```
@@ -212,6 +236,11 @@ extraction directly bounds verdict quality. Everything is checkpointed:
 interrupt and re-run freely; already-done schemes are skipped via content hash.
 
 ## Tests / validation
+
+`python tests/test_funnel.py` — guided-funnel policy validation (no LLM
+service needed): wide-net candidate surfacing, farmer-relevance ranking,
+exactly-one-LLM-call-per-turn, zero-call `more` pagination, narrowing on
+follow-up answers, graceful extraction failure.
 
 `python tests/test_engine.py` — persona-based validation (no pytest needed):
 7 hand-built personas against the 5 gold schemes (19 assertions) + personas

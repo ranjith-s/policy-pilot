@@ -105,6 +105,13 @@ class SemanticIndex:
     def available():
         return EMB_PATH.exists() and IDS_PATH.exists()
 
+    def all_scores(self, text):
+        """Cosine score for EVERY scheme id (one matmul). Used by the
+        funnel's relevance-blended ranking; fail-fast like query()."""
+        q = self.embedder.embed(text, retries=0)
+        q /= (np.linalg.norm(q) + 1e-9)
+        return dict(zip(self.ids, (self.mat @ q).tolist()))
+
     def query(self, text, top_k=10, restrict_ids=None):
         # fail fast at query time: if the embedding service is down we want
         # an instant keyword fallback, not retry backoff (build keeps retries)

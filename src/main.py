@@ -19,6 +19,7 @@ if hasattr(sys.stdout, "reconfigure"):
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from agent import Agent
+from funnel import FunnelAgent
 from llm import OllamaClient, GeminiClient, OpenAIClient, MockLLM
 
 BANNER = """
@@ -28,7 +29,8 @@ BANNER = """
 Tell me about yourself and what you're looking for, e.g.:
   "I'm a 62 year old artist, what support can I get?"
   "I'm a widow living in Delhi"
-Type 'profile' to see stored facts, 'reset' to start over, 'quit' to exit.
+Type 'more' for more results, 'profile' to see stored facts,
+'reset' to start over, 'quit' to exit.
 
 NOTE: Results are indicative only. Always verify on the official
 myScheme portal (https://www.myscheme.gov.in) before applying.
@@ -43,6 +45,8 @@ STEP_LABELS = {
     "update_profile": "noting your details",
     "ask_user": "preparing a question",
     "final_answer": "writing the answer",
+    "rank_schemes": "ranking results",
+    "show_more": "paging results",
 }
 
 
@@ -71,6 +75,9 @@ def main():
                          "(--gemini) / gpt-4o-mini (--chatgpt)")
     ap.add_argument("--host", default="http://localhost:11434")
     ap.add_argument("--show-trace", action="store_true", help="print agent steps live")
+    ap.add_argument("--react", action="store_true",
+                    help="use the free ReAct agent (LLM picks tools each step) "
+                         "instead of the default guided funnel")
     args = ap.parse_args()
 
     if args.mock:
@@ -82,9 +89,11 @@ def main():
     else:
         llm = OllamaClient(model=args.model or "qwen3:4b-instruct", host=args.host)
     on_step = make_step_printer(args.show_trace)
-    agent = Agent(llm, on_step=on_step)
+    agent_cls = Agent if args.react else FunnelAgent
+    agent = agent_cls(llm, on_step=on_step)
 
     print(BANNER)
+    print(f"  (mode: {'free ReAct agent' if args.react else 'guided funnel'})")
     if args.mock:
         print("  (running with MockLLM — deterministic scripted agent)\n")
 
@@ -104,7 +113,7 @@ def main():
             print(f"stored profile: {agent.profile}")
             continue
         if user.lower() == "reset":
-            agent = Agent(llm, on_step=on_step)
+            agent = agent_cls(llm, on_step=on_step)
             pending_question = False
             print("(new session)")
             continue
