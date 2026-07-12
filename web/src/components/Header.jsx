@@ -16,10 +16,14 @@ export default function Header({ stats }) {
     <header>
       <div className="wrap header-row">
         <div className="seal" aria-hidden="true">
-          हक़
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            {/* compass needle — guidance, language-neutral */}
+            <path d="M10 1 L13 10 L10 19 L7 10 Z" fill="currentColor" />
+            <circle cx="10" cy="10" r="1.6" fill="var(--teal)" />
+          </svg>
         </div>
         <div>
-          <div className="brand-name">Haqdar</div>
+          <div className="brand-name">PolicyPilot</div>
           <div className="brand-sub">
             Public Scheme Eligibility Assistant · myScheme corpus
           </div>

@@ -1,5 +1,5 @@
 """
-server.py — FastAPI backend for the React UI (Haqdar).
+server.py — FastAPI backend for the React UI (PolicyPilot).
 
 Thin HTTP wrapper around FunnelAgent: sessions in memory, structured JSON
 responses (the same `data` payload the funnel builds for every turn).
@@ -23,7 +23,7 @@ from llm import OllamaClient, MockLLM        # noqa: E402
 import tools                                  # noqa: E402
 from engine import _load_rules                # noqa: E402
 
-app = FastAPI(title="Haqdar API")
+app = FastAPI(title="PolicyPilot API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],

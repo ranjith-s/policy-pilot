@@ -191,7 +191,7 @@ so the app optimizes call count and visibility:
 ```bash
 pip install -r requirements.txt        # numpy + fastapi/uvicorn; Ollama separate
 
-# Web UI "Haqdar" (React) — http://localhost:5173
+# Web UI "PolicyPilot" (React) — http://localhost:5173
 uvicorn api.server:app --port 8000        # backend (FastAPI wrapper)
 cd web && npm install && npm run dev      # frontend (Vite + React)
 
@@ -253,7 +253,7 @@ auto-skip if those schemes aren't merged yet.
 ## Repository structure
 
 ```
-├── web/                        React UI "Haqdar" (Vite; entitlement-ledger design)
+├── web/                        React UI "PolicyPilot" (Vite; entitlement-ledger design)
 ├── api/server.py               FastAPI backend for the React UI (sessions, JSON)
 ├── src/
 │   ├── main.py                 CLI entry point

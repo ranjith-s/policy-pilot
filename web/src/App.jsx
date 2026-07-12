@@ -167,7 +167,7 @@ export default function App() {
       </div>
       <footer>
         <div className="wrap">
-          Haqdar is an independent assistant built on public myScheme data.
+          PolicyPilot is an independent assistant built on public myScheme data.
           Results are indicative only — always verify on the{" "}
           <a href="https://www.myscheme.gov.in" target="_blank" rel="noreferrer">
             official myScheme portal

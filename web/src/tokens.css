@@ -1,4 +1,4 @@
-/* Haqdar design tokens — light is default, dark via media query,
+/* PolicyPilot design tokens — light is default, dark via media query,
    explicit data-theme wins in both directions. Components read ONLY tokens. */
 
 :root {
