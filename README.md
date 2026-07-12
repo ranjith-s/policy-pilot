@@ -15,7 +15,7 @@ extracting structured rules from official eligibility text.
 | What | Count |
 |---|---|
 | Schemes in knowledge base (full myScheme scrape) | 4,682 |
-| Schemes with engine-checkable eligibility rules | 1,402+ (extraction ongoing → target ~4,600) |
+| Schemes with engine-checkable eligibility rules | 3,810 (extraction complete; the other 867 have free-text-only criteria the engine can't check) |
 | Schemes with official document checklists | 4,662 |
 | Schemes with official FAQs | 4,664 |
 | Rule-extraction accuracy vs hand-curated gold rows | 88% field agreement |
@@ -255,7 +255,10 @@ portal and says so. Known limitations:
 - LLM-extracted rules are ~88% accurate on the audit set; extraction errs
   toward omission (a missed criterion over-includes, never wrongly excludes
   on a stated criterion). Users must verify on the official page.
-- Rules coverage is partial until the extraction backfill completes.
+- 867 schemes have free-text-only eligibility criteria (institutional /
+  procedural conditions) that don't map to structured fields — the engine
+  can't verdict these; the agent may only describe them (`rules_available:
+  false` in search results).
 - `category` mixes social category (SC/ST/OBC/EWS) with economic status
   (BPL) in one field.
 - Occupation matching is exact-token ("mason" won't match "construction
@@ -267,7 +270,7 @@ portal and says so. Known limitations:
 
 ## Future improvements
 
-- Finish the rule-extraction backfill; periodic `refresh.py` runs.
+- Periodic `refresh.py` runs to keep the corpus and rules current.
 - Fuzzy occupation/category matching; separate BPL from social category.
 - Query-time LLM "soft check" (clearly labeled non-verdict) for schemes
   without structured rules.

@@ -185,7 +185,7 @@ class MockLLM:
             eligible = obs.get("summary", {}).get("eligible", [])
             if nq and transcript.count('"ask_user"') < 2:
                 return act(
-                    f"Missing field '{nq['field']}' blocks {len(nq['blocking_schemes'])} schemes.",
+                    f"Missing field '{nq['field']}' blocks {nq.get('blocking_count', 0)} schemes.",
                     "ask_user",
                     {"question": nq["question"]},
                 )

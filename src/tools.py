@@ -158,6 +158,13 @@ def compact_engine_obs(obs, max_eligible=10, max_partial=5):
     results = obs["results"]
     eligible = [r for r in results if r["status"] == "eligible"]
     partial = [r for r in results if r["status"] == "partial"]
+    nq = obs["suggested_next_question"]
+    if nq:
+        # blocking_schemes can be thousands of names — with a pinned 8k
+        # context that alone overflows the window; send count + examples
+        nq = {"field": nq["field"], "question": nq["question"],
+              "blocking_count": len(nq["blocking_schemes"]),
+              "blocking_examples": nq["blocking_schemes"][:3]}
     return {
         "counts": {"eligible": len(eligible), "partial": len(partial),
                    "not_eligible": len(results) - len(eligible) - len(partial)},
@@ -172,7 +179,7 @@ def compact_engine_obs(obs, max_eligible=10, max_partial=5):
              "missing_fields": r["missing_fields"]}
             for r in partial[:max_partial]
         ],
-        "suggested_next_question": obs["suggested_next_question"],
+        "suggested_next_question": nq,
         "summary": {"eligible": [r["scheme_name"] for r in eligible[:max_eligible]],
                     "partial": [r["scheme_name"] for r in partial[:max_partial]]},
     }
