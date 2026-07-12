@@ -47,7 +47,7 @@ but a small local model may skip follow-ups or write slow, long answers —
 measured failure modes that motivated the funnel (see the trace logs).
 
 ```
-User (CLI or Streamlit UI)
+User (CLI or React UI)
    │
    ▼
 ReAct Agent Loop (src/agent.py)        ← LLM decides ONE action per step:
@@ -189,14 +189,12 @@ so the app optimizes call count and visibility:
 ## Run
 
 ```bash
-pip install -r requirements.txt        # numpy + streamlit; Ollama separate
+pip install -r requirements.txt        # numpy + fastapi/uvicorn; Ollama separate
 
-# React UI "Haqdar" (recommended) — http://localhost:5173
+# Web UI "Haqdar" (React) — http://localhost:5173
 uvicorn api.server:app --port 8000        # backend (FastAPI wrapper)
 cd web && npm install && npm run dev      # frontend (Vite + React)
 
-# Streamlit UI — http://localhost:8501
-streamlit run app/app.py
 
 # CLI (guided funnel by default)
 python src/main.py --show-trace        # local Ollama (pull qwen3:4b-instruct)
@@ -257,7 +255,6 @@ auto-skip if those schemes aren't merged yet.
 ```
 ├── web/                        React UI "Haqdar" (Vite; entitlement-ledger design)
 ├── api/server.py               FastAPI backend for the React UI (sessions, JSON)
-├── app/app.py                  Streamlit chat UI (backends, live steps, stats)
 ├── src/
 │   ├── main.py                 CLI entry point
 │   ├── agent.py                ReAct loop + guardrails + trace log

@@ -56,7 +56,7 @@ MORE_RE = re.compile(r"^\s*(more|show more|next|more schemes|show me more)\s*[.!
 
 class FunnelAgent:
     """Same public surface as agent.Agent: run_turn / answer_question /
-    profile / on_step, so the CLI and Streamlit UI can swap them freely."""
+    profile / on_step, so the CLI and API server can swap them freely."""
 
     def __init__(self, llm, session_id=None, on_step=None, use_semantic=True):
         self.llm = llm

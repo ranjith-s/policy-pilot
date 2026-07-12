@@ -2,12 +2,6 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "streamlit-ui",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "streamlit", "run", "app/app.py", "--server.port", "8501", "--server.headless", "true"],
-      "port": 8501
-    },
-    {
       "name": "haqdar-api",
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "uvicorn", "api.server:app", "--port", "8000"],
