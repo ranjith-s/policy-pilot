@@ -106,10 +106,11 @@ EXAMPLES = [
 
 @st.cache_data
 def coverage_stats():
+    from engine import _is_annotated   # engine-checkable, not just processed
     n_rules = 0
     with open(ROOT / "data" / "scheme_rules.csv", newline="", encoding="utf-8") as f:
         for row in csv.DictReader(f):
-            if (row.get("rules_source") or "").strip():
+            if _is_annotated(row):
                 n_rules += 1
     with open(ROOT / "data" / "rag_corpus.json", encoding="utf-8") as f:
         n_total = len(json.load(f))
