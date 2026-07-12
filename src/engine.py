@@ -121,14 +121,20 @@ def _check_one(rule, profile):
         gender = (profile.get("gender") or "").strip().lower()
 
         if female_ok and gender == "female":
+            # scheme admits women of ANY category (e.g. Stand-Up India):
+            # a female applicant passes regardless of caste category
             reasons.append("Eligible as a woman applicant (any category)")
         else:
             plain_allowed = [a for a in allowed if a != "female_any_category"]
             if not cat and not (female_ok and not gender):
+                # category unknown -> can't verdict; ask for it (and gender
+                # too when the female pathway could still apply)
                 need("category")
                 if female_ok and not gender:
                     need("gender")
             elif cat and plain_allowed and cat not in plain_allowed:
+                # wrong category, BUT if gender is unknown and the female
+                # pathway exists, don't fail yet — ask for gender first
                 if female_ok and not gender:
                     need("gender")  # could still qualify as female
                 else:
