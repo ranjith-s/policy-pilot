@@ -4,7 +4,7 @@ server.py — FastAPI backend for the React UI (PolicyPilot).
 Thin HTTP wrapper around FunnelAgent: sessions in memory, structured JSON
 responses (the same `data` payload the funnel builds for every turn).
 
-Run:  uvicorn api.server:app --port 8000 --reload
+Run:  python -m uvicorn api.server:app --port 8000 --reload
 """
 
 import sys

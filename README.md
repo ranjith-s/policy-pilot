@@ -192,7 +192,7 @@ so the app optimizes call count and visibility:
 pip install -r requirements.txt        # numpy + fastapi/uvicorn; Ollama separate
 
 # Web UI "PolicyPilot" (React) — http://localhost:5173
-uvicorn api.server:app --port 8000        # backend (FastAPI wrapper)
+python -m uvicorn api.server:app --port 8000   # backend (FastAPI wrapper)
 cd web && npm install && npm run dev      # frontend (Vite + React)
 
 
