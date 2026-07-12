@@ -67,6 +67,7 @@ class FunnelAgent:
         self.eligible = []              # full ranked lists (session state)
         self.candidates = []
         self.shown = {"eligible": 0, "candidates": 0}   # pagination cursors
+        self.last_next_q = None         # last suggested question (dict)
         self.use_semantic = use_semantic
         self._sem = None
         self._sem_tried = False
@@ -189,6 +190,35 @@ class FunnelAgent:
     def _human(field):
         return field.replace("_", " ")
 
+    @staticmethod
+    def _row(r):
+        return {"scheme_id": r["scheme_id"], "scheme_name": r["scheme_name"],
+                "reasons": r["reasons"], "missing_fields": r["missing_fields"],
+                "documents_required": r["documents_required"][:6],
+                "other_conditions": (r["other_conditions"] or "")[:200]}
+
+    def _data(self, e_from, c_from, next_q=None):
+        """Structured view of the current page — what a UI (React) renders.
+        Mirrors exactly what _render_page showed as text."""
+        unlocks = None
+        if next_q:
+            field = next_q["field"]
+            unlocks = sum(1 for r in self.candidates if field in r["missing_fields"])
+        return {
+            "profile": dict(self.profile),
+            "counts": {"eligible": len(self.eligible),
+                       "candidates": len(self.candidates)},
+            "eligible": [self._row(r) for r in self.eligible[e_from:self.shown["eligible"]]],
+            "candidates": [self._row(r) for r in self.candidates[c_from:self.shown["candidates"]]],
+            "page_start": {"eligible": e_from, "candidates": c_from},
+            "shown": dict(self.shown),
+            "remaining": (len(self.eligible) - self.shown["eligible"]
+                          + len(self.candidates) - self.shown["candidates"]),
+            "next_question": ({"field": next_q["field"],
+                               "question": next_q["question"],
+                               "unlocks": unlocks} if next_q else None),
+        }
+
     def _render_page(self, header=True):
         out = []
         e_from, c_from = self.shown["eligible"], self.shown["candidates"]
@@ -230,6 +260,7 @@ class FunnelAgent:
             self.last_question = next_q["question"]
         else:
             self.last_question = None
+        self.last_next_q = next_q
         remaining = (len(self.eligible) - self.shown["eligible"]
                      + len(self.candidates) - self.shown["candidates"])
         if remaining > 0:
@@ -246,18 +277,20 @@ class FunnelAgent:
         # 'more' = pure pagination: zero LLM calls, instant
         if MORE_RE.match(user_message):
             if not (self.eligible or self.candidates):
-                return {"type": "answer", "steps": steps,
+                return {"type": "answer", "steps": steps, "data": None,
                         "text": "Tell me about yourself first — e.g. \"I'm a farmer "
                                 "in Tamil Nadu\" — and I'll list matching schemes."}
             self._step(steps, "show_more", {"cursor": dict(self.shown)},
                        "Paging through the ranked list (no LLM needed).")
+            e_from, c_from = self.shown["eligible"], self.shown["candidates"]
             lines = self._render_page(header=False)
             if self.last_question:
                 lines.append(f"To narrow this down: {self.last_question}")
             lines.append(DISCLAIMER)
             text = "\n".join(lines)
             self._trace(event="final_answer", text=text[:500])
-            return {"type": "answer", "text": text, "steps": steps}
+            return {"type": "answer", "text": text, "steps": steps,
+                    "data": self._data(e_from, c_from, self.last_next_q)}
 
         # 1. ONE LLM call: extract facts + topic words
         t0 = time.time()
@@ -291,7 +324,8 @@ class FunnelAgent:
 
         text = self._compose(next_q)
         self._trace(event="final_answer", text=text[:500])
-        return {"type": "answer", "text": text, "steps": steps}
+        return {"type": "answer", "text": text, "steps": steps,
+                "data": self._data(0, 0, next_q)}
 
     def answer_question(self, user_answer):
         return self.run_turn(user_answer)

@@ -5,3 +5,7 @@ logs
 
 # raw portal scrape output (~95 MB) — regenerate with pipeline/rescrape.py
 data_raw/
+
+# frontend
+web/node_modules/
+web/dist/

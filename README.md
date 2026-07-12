@@ -191,7 +191,11 @@ so the app optimizes call count and visibility:
 ```bash
 pip install -r requirements.txt        # numpy + streamlit; Ollama separate
 
-# Web UI (recommended) — http://localhost:8501
+# React UI "Haqdar" (recommended) — http://localhost:5173
+uvicorn api.server:app --port 8000        # backend (FastAPI wrapper)
+cd web && npm install && npm run dev      # frontend (Vite + React)
+
+# Streamlit UI — http://localhost:8501
 streamlit run app/app.py
 
 # CLI (guided funnel by default)
@@ -251,6 +255,8 @@ auto-skip if those schemes aren't merged yet.
 ## Repository structure
 
 ```
+├── web/                        React UI "Haqdar" (Vite; entitlement-ledger design)
+├── api/server.py               FastAPI backend for the React UI (sessions, JSON)
 ├── app/app.py                  Streamlit chat UI (backends, live steps, stats)
 ├── src/
 │   ├── main.py                 CLI entry point

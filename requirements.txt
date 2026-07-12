@@ -1,3 +1,5 @@
 # (Ollama runs as a separate local service: https://ollama.com)
 numpy          # semantic retrieval (cosine search over precomputed embeddings)
 streamlit      # web UI (app/app.py); CLI works without it
+fastapi        # React-UI backend (api/server.py)
+uvicorn        # ASGI server for the API

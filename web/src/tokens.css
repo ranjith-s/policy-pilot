@@ -1,0 +1,87 @@
+/* Haqdar design tokens — light is default, dark via media query,
+   explicit data-theme wins in both directions. Components read ONLY tokens. */
+
+:root {
+  --paper:   #FAF9F6;
+  --surface: #FFFFFF;
+  --ink:     #1A2421;
+  --ink-2:   #566058;
+  --ink-3:   #8B948C;
+  --line:    #E4E1D8;
+  --line-2:  #EFEDE6;
+  --teal:    #10645C;
+  --teal-soft: #E7F0EE;
+  --seal-fg: #FAF9F6;
+  --marigold:  #D9921F;
+  --marigold-soft: #FBF3E3;
+  --ok:      #2E7D4F;
+  --ok-soft: #EAF3ED;
+  --warn:    #B87A1E;
+  --warn-soft: #FAF2E2;
+  --shadow: 0 1px 2px rgba(26, 36, 33, 0.05), 0 8px 24px rgba(26, 36, 33, 0.05);
+  --serif: Georgia, Cambria, "Times New Roman", serif;
+  --sans: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial,
+    sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:   #101613;
+    --surface: #171E1A;
+    --ink:     #E9E6DC;
+    --ink-2:   #A7AFA6;
+    --ink-3:   #6E776E;
+    --line:    #2A322C;
+    --line-2:  #222925;
+    --teal:    #57B3A6;
+    --teal-soft: #1A2A27;
+    --seal-fg: #101613;
+    --marigold:  #E3A83B;
+    --marigold-soft: #2A2317;
+    --ok:      #6DBE8E;
+    --ok-soft: #1B2A21;
+    --warn:    #D9A24C;
+    --warn-soft: #2A2315;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:   #101613;
+  --surface: #171E1A;
+  --ink:     #E9E6DC;
+  --ink-2:   #A7AFA6;
+  --ink-3:   #6E776E;
+  --line:    #2A322C;
+  --line-2:  #222925;
+  --teal:    #57B3A6;
+  --teal-soft: #1A2A27;
+  --seal-fg: #101613;
+  --marigold:  #E3A83B;
+  --marigold-soft: #2A2317;
+  --ok:      #6DBE8E;
+  --ok-soft: #1B2A21;
+  --warn:    #D9A24C;
+  --warn-soft: #2A2315;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+:root[data-theme="light"] {
+  --paper:   #FAF9F6;
+  --surface: #FFFFFF;
+  --ink:     #1A2421;
+  --ink-2:   #566058;
+  --ink-3:   #8B948C;
+  --line:    #E4E1D8;
+  --line-2:  #EFEDE6;
+  --teal:    #10645C;
+  --teal-soft: #E7F0EE;
+  --seal-fg: #FAF9F6;
+  --marigold:  #D9921F;
+  --marigold-soft: #FBF3E3;
+  --ok:      #2E7D4F;
+  --ok-soft: #EAF3ED;
+  --warn:    #B87A1E;
+  --warn-soft: #FAF2E2;
+  --shadow: 0 1px 2px rgba(26, 36, 33, 0.05), 0 8px 24px rgba(26, 36, 33, 0.05);
+}
