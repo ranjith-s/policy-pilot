@@ -137,6 +137,42 @@ def run():
     assert nq2 is None, "complete profile should not trigger questions"
     print("ok    complete profile -> no follow-up question")
 
+    # ranking: the occupation-targeted artist scheme must reach the top-10
+    # view the LLM sees, ahead of one-constraint generic schemes
+    import tools
+    artist = PERSONAS[2]["profile"]
+    obs = tools.compact_engine_obs(tools.run_eligibility_check(profile=artist))
+    top_ids = [e["scheme_id"] for e in obs["eligible"]]
+    assert "sfava" in top_ids, f"artist scheme not in top-10: {top_ids}"
+    scores = [e["match_score"] for e in obs["eligible"]]
+    assert scores == sorted(scores, reverse=True), "eligible not sorted by match_score"
+    print(f"ok    ranking -> 'sfava' in LLM top-10 (position {top_ids.index('sfava') + 1})")
+
+    # verdict guard: naming an ELIGIBLE scheme whose name contains a
+    # non-eligible scheme's name ("Marriage Assistance" ⊂ "Marriage
+    # Assistance To Differently Abled Women") must NOT be rejected,
+    # while naming the non-eligible scheme alone must be
+    from agent import Agent
+    from llm import MockLLM
+    ag = Agent(MockLLM())
+    ag.last_engine_result = tools.run_eligibility_check(profile=artist)
+    st = {r["scheme_name"]: r["status"] for r in ag.last_engine_result["results"]}
+    sub = next((ne for ne in st if st[ne] != "eligible"
+                for el in st if st[el] == "eligible"
+                and ne.lower() in el.lower() and ne.lower() != el.lower()), None)
+    if sub:
+        container = next(el for el in st if st[el] == "eligible"
+                         and sub.lower() in el.lower() and sub.lower() != el.lower())
+        assert not ag._violates_verdict_guard(
+            f"You are eligible for: {container}."), \
+            f"guard false-rejects eligible '{container}' (contains '{sub}')"
+        assert ag._violates_verdict_guard(
+            f"You are eligible for: {sub}."), \
+            f"guard misses non-eligible '{sub}' claimed eligible"
+        print(f"ok    verdict guard -> '{container}' passes, bare '{sub}' rejected")
+    else:
+        print("skip  verdict-guard substring test — no name collision in results")
+
     print(f"\n{'ALL TESTS PASSED' if failures == 0 else f'{failures} FAILURES'}")
     return failures
 

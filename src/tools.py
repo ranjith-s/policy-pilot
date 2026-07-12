@@ -156,8 +156,15 @@ def compact_engine_obs(obs, max_eligible=10, max_partial=5):
     it: top eligible with reasons/docs, top partial with missing fields,
     counts for the rest. The agent keeps the FULL result for its guards."""
     results = obs["results"]
-    eligible = [r for r in results if r["status"] == "eligible"]
-    partial = [r for r in results if r["status"] == "partial"]
+    # best-targeted schemes first: most verified constraints, then rows
+    # without unverified free-text conditions; partial = closest to a
+    # verdict first (fewest missing fields, most specific rule)
+    eligible = sorted(
+        (r for r in results if r["status"] == "eligible"),
+        key=lambda r: (-r["match_score"], bool(r["other_conditions"].strip())))
+    partial = sorted(
+        (r for r in results if r["status"] == "partial"),
+        key=lambda r: (len(r["missing_fields"]), -r["match_score"]))
     nq = obs["suggested_next_question"]
     if nq:
         # blocking_schemes can be thousands of names — with a pinned 8k
@@ -170,6 +177,7 @@ def compact_engine_obs(obs, max_eligible=10, max_partial=5):
                    "not_eligible": len(results) - len(eligible) - len(partial)},
         "eligible": [
             {"scheme_id": r["scheme_id"], "scheme_name": r["scheme_name"],
+             "match_score": r["match_score"],
              "reasons": r["reasons"], "other_conditions": r["other_conditions"][:200],
              "documents_required": r["documents_required"]}
             for r in eligible[:max_eligible]

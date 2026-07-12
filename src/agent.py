@@ -37,7 +37,7 @@ STRICT RULES:
 - In search_schemes, only pass "state" if the user named their state; only pass "category" if clearly needed. When unsure, use query words alone.
 - ALWAYS call run_eligibility_check once after saving the user's facts. It checks every rule-annotated scheme at once — even schemes search did not return — so run it even if search results look unpromising.
 - If run_eligibility_check reports a suggested_next_question and you have questions left, use ask_user with it. One question at a time.
-- In your final_answer: state eligible schemes with reasons, required documents, and how to apply. Always add: "This is indicative only — verify on the official myScheme portal before applying."
+- In your final_answer: present AT MOST the 5 best eligible schemes (they arrive ranked — take them in order) with reasons, required documents, and how to apply; mention how many more were eligible. Keep it under 250 words. Always add: "This is indicative only — verify on the official myScheme portal before applying."
 - If nothing matches, say so honestly and suggest the nearest Common Service Centre.
 - Keep "thought" to ONE short sentence.
 - Respond ONLY with the JSON object. No other text.
@@ -105,13 +105,27 @@ class Agent:
                       "might be eligible", "partial", "more info",
                       "more information", "cannot verify", "could not verify",
                       "couldn't verify", "unable to verify")
-        for r in self.last_engine_result["results"]:
-            name = r["scheme_name"].lower()
-            if r["status"] == "eligible" or name not in text:
+        results = self.last_engine_result["results"]
+        eligible_names = sorted(
+            (r["scheme_name"].lower() for r in results if r["status"] == "eligible"),
+            key=len, reverse=True)
+        bad_names = [r["scheme_name"].lower() for r in results
+                     if r["status"] != "eligible" and r["scheme_name"].lower() in text]
+        if not bad_names:
+            return False
+        for line in text.splitlines():
+            if any(q in line for q in qualifiers):
                 continue
-            for line in text.splitlines():
-                if name in line and not any(q in line for q in qualifiers):
-                    return True
+            # short generic scheme names ("Marriage Assistance", "Skill
+            # Development") are substrings of longer ELIGIBLE scheme names —
+            # mask eligible names first so only a standalone mention of a
+            # non-eligible scheme counts as a violation
+            masked = line
+            for en in eligible_names:
+                if en in masked:
+                    masked = masked.replace(en, "\x00")
+            if any(name in masked for name in bad_names):
+                return True
         return False
 
     # ------------------------------------------------------------------ #
@@ -215,11 +229,21 @@ class Agent:
     def _fallback(self, steps):
         """Non-LLM safety net so a demo can never dead-end."""
         if self.last_engine_result:
-            s = self.last_engine_result["summary"]
+            results = self.last_engine_result["results"]
+            eligible = sorted((r for r in results if r["status"] == "eligible"),
+                              key=lambda r: -r["match_score"])
+            partial = sorted((r for r in results if r["status"] == "partial"),
+                             key=lambda r: len(r["missing_fields"]))
+
+            def cap(items, n=8):
+                names = [r["scheme_name"] for r in items[:n]]
+                extra = len(items) - len(names)
+                return (", ".join(names) + (f" (and {extra} more)" if extra > 0 else "")) or "none"
+
             text = ("Here is what the rules check found so far — Eligible: "
-                    + (", ".join(s["eligible"]) or "none")
+                    + cap(eligible)
                     + ". Possibly eligible (more info needed): "
-                    + (", ".join(s["partial"]) or "none")
+                    + cap(partial, 5)
                     + ". This is indicative only — verify on the official myScheme portal.")
         else:
             text = ("I couldn't complete the check this time. Please try rephrasing, "

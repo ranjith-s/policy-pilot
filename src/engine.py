@@ -226,10 +226,19 @@ def check_eligibility(profile, rules_csv=None):
     results = []
     for rule in _load_rules(rules_csv):
         status, reasons, missing = _check_one(rule, profile)
+        # match_score = how specifically this rule targets the user: one
+        # point per structured constraint the row defines, occupation and
+        # marital_status double (they pick out a group, "age 18+" doesn't).
+        # An "eligible" verdict from a 5-constraint rule beats one from a
+        # rule that only checked age.
+        spec = sum(1 for c in STRUCTURED_COLUMNS if (rule.get(c) or "").strip())
+        spec += sum(1 for c in ("occupation", "marital_status")
+                    if (rule.get(c) or "").strip())
         results.append({
             "scheme_id": rule["id"],
             "scheme_name": rule["scheme_name"],
             "status": status,
+            "match_score": spec,
             "reasons": reasons,
             "missing_fields": missing,
             "other_conditions": rule.get("other_conditions", ""),
