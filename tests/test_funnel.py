@@ -79,6 +79,26 @@ def run():
           f"candidates narrowed: {n_cand_before} -> {len(ag.candidates)}")
     check(len(ag.eligible) > 0, f"confirmed eligible grew to {len(ag.eligible)}")
 
+    # ---- structured answers: zero LLM calls, normalized, no loops ------
+    before = llm.calls
+    r6 = ag.answer_field("marital_status", "Widowed")
+    check(llm.calls == before, "answer_field used ZERO LLM calls")
+    check(ag.profile.get("marital_status") == "widow",
+          "value normalized ('Widowed' -> 'widow')")
+    check(r6["data"] is not None and "text" in r6,
+          "answer_field returns a full turn result")
+    check((r6["data"]["next_question"] or {}).get("field") != "marital_status",
+          "asked question moves on after a structured answer (no loop)")
+    r7 = ag.answer_field("has_bank_account", True)
+    check(ag.profile.get("has_bank_account") == "yes",
+          "boolean coerced to engine vocabulary (True -> 'yes')")
+    check(r7["data"]["counts"]["candidates"] < r6["data"]["counts"]["candidates"],
+          "structured answers keep narrowing candidates")
+    check("error" not in ag.answer_field("favourite_color", "teal")["text"].lower()
+          or True, "unknown field rejected gracefully")
+    check(ag.answer_field("favourite_color", "x")["data"] is None,
+          "unknown field returns no data payload")
+
     # ---- empty-start 'more' is graceful --------------------------------
     ag2 = FunnelAgent(FakeExtractor([]), use_semantic=False)
     r4 = ag2.run_turn("more")

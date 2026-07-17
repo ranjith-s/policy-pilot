@@ -42,10 +42,14 @@ def _make_agent(backend: str = "ollama", model: str | None = None) -> FunnelAgen
 
 
 class ChatIn(BaseModel):
-    message: str
+    message: str = ""
     session_id: str | None = None
     backend: str = "ollama"          # "ollama" | "mock"
     model: str | None = None
+    # structured answer from a UI control (dropdown/chips) — when both are
+    # set, the turn skips the LLM entirely
+    field: str | None = None
+    value: str | int | bool | None = None
 
 
 @app.on_event("startup")
@@ -71,7 +75,10 @@ def chat(inp: ChatIn):
         SESSIONS[sid] = _make_agent(inp.backend, inp.model)
     agent = SESSIONS[sid]
 
-    result = agent.run_turn(inp.message)
+    if inp.field is not None and inp.value is not None:
+        result = agent.answer_field(inp.field, inp.value)
+    else:
+        result = agent.run_turn(inp.message)
     return {
         "session_id": sid,
         "text": result["text"],

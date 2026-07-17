@@ -34,7 +34,7 @@ export default function App() {
   }, []);
 
   const send = useCallback(
-    async (message) => {
+    async (message, fieldAnswer = null) => {
       setLoading(true);
       setError(null);
       const isMore = /^more$/i.test(message.trim());
@@ -43,7 +43,7 @@ export default function App() {
         const r = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message, session_id: sessionId }),
+          body: JSON.stringify({ message, session_id: sessionId, ...(fieldAnswer || {}) }),
         });
         if (!r.ok) throw new Error(`server returned ${r.status}`);
         const out = await r.json();
@@ -133,6 +133,7 @@ export default function App() {
 
           {data && (
             <>
+              {data.notice && <div className="error-note">{data.notice}</div>}
               <Ledger
                 variant="eligible"
                 title="Eligible by the rules check"
@@ -159,6 +160,9 @@ export default function App() {
             started={!!data}
             busy={loading}
             onSubmit={send}
+            onAnswerField={(field, value) =>
+              send(`${field.replace(/_/g, " ")}: ${value}`, { field, value })
+            }
           />
         </main>
 

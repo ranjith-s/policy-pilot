@@ -53,6 +53,24 @@ Rules:
 
 MORE_RE = re.compile(r"^\s*(more|show more|next|more schemes|show me more)\s*[.!]*\s*$", re.I)
 
+# common phrasings -> the engine's controlled vocabulary
+VALUE_SYNONYMS = {
+    "marital_status": {"widowed": "widow", "unmarried": "single",
+                       "never married": "single"},
+    "has_bank_account": {"true": "yes", "false": "no"},
+    "land_owner": {"true": "yes", "false": "no"},
+}
+
+
+def _norm_value(field, value):
+    if isinstance(value, bool):
+        value = "yes" if value else "no"
+    v = str(value).strip()
+    lower = v.lower()
+    return VALUE_SYNONYMS.get(field, {}).get(lower, lower) \
+        if field in ("marital_status", "gender", "has_bank_account", "land_owner") \
+        else value
+
 
 class FunnelAgent:
     """Same public surface as agent.Agent: run_turn / answer_question /
@@ -133,7 +151,7 @@ class FunnelAgent:
             except Exception:
                 if attempt == 2:
                     self._trace(event="extract_failure", message=user_message[:200])
-                    return {}, ""
+                    return {}, "", False
                 messages.append({"role": "user",
                                  "content": "Not valid JSON. Respond again with ONLY "
                                             'the JSON object {"fields": {...}, "keywords": "..."}.'})
@@ -141,8 +159,8 @@ class FunnelAgent:
         for k, v in (fields or {}).items():
             if k in KNOWN_FIELDS and str(v).strip().lower() not in (
                     "", "none", "null", "unknown", "n/a", "not stated"):
-                clean[k] = v
-        return clean, keywords
+                clean[k] = _norm_value(k, v)
+        return clean, keywords, True
 
     # ------------------------------------------------------------- ranking --
     def _relevance(self, ids):
@@ -294,7 +312,7 @@ class FunnelAgent:
 
         # 1. ONE LLM call: extract facts + topic words
         t0 = time.time()
-        fields, keywords = self._extract(user_message)
+        fields, keywords, extract_ok = self._extract(user_message)
         if fields:
             self.profile.update(fields)
         if keywords:
@@ -303,16 +321,47 @@ class FunnelAgent:
         self._step(steps, "update_profile", {"fields": fields, "keywords": keywords},
                    "Extracted the facts stated in the message.", time.time() - t0)
 
-        # 2. deterministic engine over every rule-annotated scheme
+        # a silent extraction failure would show nonsense results (empty
+        # profile = only the least-constrained schemes "pass") — say so
+        notice = None
+        if not extract_ok:
+            notice = ("I couldn't read your message just now (the language model "
+                      "didn't respond — is Ollama running?). Your saved facts are "
+                      "unchanged; the buttons below still work, or try again.")
+        result = self._check_and_respond(steps)
+        if notice:
+            result["text"] = notice + "\n\n" + result["text"]
+            if result.get("data"):
+                result["data"]["notice"] = notice
+        return result
+
+    def answer_field(self, field, value):
+        """Structured answer from a UI control (dropdown/chips): the field
+        and value are KNOWN, so no LLM call is needed — the save is
+        deterministic and the asked-question loop can't happen."""
+        steps = []
+        if field not in KNOWN_FIELDS:
+            return {"type": "answer", "steps": steps, "data": None,
+                    "text": f"Unknown field '{field}'."}
+        value = _norm_value(field, value)
+        self.profile[field] = value
+        self._trace(event="user_message", text=f"[{field}: {value}]")
+        self._step(steps, "update_profile", {"fields": {field: value}},
+                   "Structured answer — saved without an LLM call.")
+        return self._check_and_respond(steps)
+
+    def _check_and_respond(self, steps):
+        """Shared turn tail: engine -> ranking -> next question -> answer."""
+        # deterministic engine over every rule-annotated scheme
         t0 = time.time()
         results = check_eligibility(self.profile)
         self._step(steps, "run_eligibility_check",
                    {"profile": dict(self.profile)},
                    "Engine checked every rule-annotated scheme.", time.time() - t0)
 
-        # 3. relevance-blended ranking + highest-information next question,
-        #    chosen from the TOP candidates so it unblocks what the user
-        #    actually cares about
+        # relevance-blended ranking + highest-information next question,
+        # chosen from the TOP candidates so it unblocks what the user
+        # actually cares about
         t0 = time.time()
         self._rank(results)
         next_q = get_next_question(self.profile, self.candidates[:50])

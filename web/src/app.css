@@ -171,6 +171,28 @@ header { border-bottom: 1px solid var(--line); }
 }
 .question p { margin: 0; font-size: 13px; color: var(--ink-2); }
 
+.option-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.option-chip {
+  font-size: 14px; font-weight: 600;
+  color: var(--teal); background: var(--surface);
+  border: 1px solid var(--teal); border-radius: 5px;
+  padding: 9px 18px; cursor: pointer;
+  text-transform: capitalize;
+}
+.option-chip:hover:enabled { background: var(--teal); color: var(--paper); }
+.option-chip:disabled { opacity: 0.5; cursor: default; }
+
+.state-select {
+  display: block; width: 100%; margin-top: 16px;
+  font-family: var(--sans); font-size: 15px;
+  color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 5px;
+  padding: 11px 14px; cursor: pointer;
+}
+
+.or-else { margin-top: 10px; }
+.or-else input { font-size: 13.5px; }
+
 .answer-bar { display: flex; gap: 10px; margin-top: 16px; }
 .answer-bar input {
   flex: 1; font-family: var(--sans); font-size: 15px;
